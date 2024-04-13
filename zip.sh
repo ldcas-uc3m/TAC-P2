@@ -4,27 +4,34 @@
 
 set -e  # exit on error
 
-OUTFILE=../outfile.zip
+OUTFILE="../MT_3_Arnaiz_Casais.zip"
+REPORT_FILENAME="memoria.pdf"
+
 [ -e $OUTFILE ] && rm $OUTFILE  # remove if exists already
+
+# generate data
+# echo "Building turing-machine-simulator/..."
+# cd turing-machine-simulator
+# make --silent
+# cd ..
+
+# echo "Performing tests..."
+# source .venv/bin/activate
+# python3 src/test.py || exit
+
+# rm turing-machine-simulator/turing
 
 
 # compile the report (and save it to root folder)
 echo "Compiling the report..."
-
 latexmk -cd -shell-escape -silent -pdf report/report.tex 
-cp report/report.pdf .
+cp report/report.pdf $REPORT_FILENAME
 
-
-cd src
-
-# <clean stuff up>
-
-cd ..
 
 # zip it (excluding useless stuff)
 echo "Zipping..."
-zip -r $OUTFILE . -x zip.sh report/\* \*.git\* img/\* *__pycache__/\* .venv/\* build/\* .vscode/\*
+zip -q -r "$OUTFILE" . -x zip.sh report/\* \*.git\* img/\* *__pycache__/\* .venv/\* *.xml *.jar build/\* .vscode/\*
 
 # cleanup
 echo "Cleaning up..."
-rm report.pdf
+rm $REPORT_FILENAME

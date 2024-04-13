@@ -7,6 +7,8 @@ The report consists of a main file [`report.tex`](report.tex), which includes a 
 
 ## Compilation
 
+**NOTE:** Some of the images included are generated through the [`test.py`](../src/test.py) script, so make sure to execute that before compiling.
+
 First you must install LaTeX.
 
 - For Linux, install `texlive-full`.
@@ -15,8 +17,6 @@ First you must install LaTeX.
     ```
     sudo tlmgr install latexmk
     ```
-
-As we'll use SVG files, you'll need to install [Inkscape](https://inkscape.org/). If you're in Windows, make sure to add the executable to your PATH (typically located in `C:\Program Files\Inkscape\bin\`).
 
 To compile the report, use the command:
 ```
@@ -27,3 +27,5 @@ latexmk -cd -shell-escape -pdf report.tex
 Some usefull extensions:
 - [LaTeX](https://marketplace.visualstudio.com/items?itemName=mathematic.vscode-latex)
 - [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)
+
+If you are using the extension, please set `-shell-escape` (see [LaTeX Workshop FAQ](https://github.com/James-Yu/LaTeX-Workshop/wiki/FAQ#how-to-pass--shell-escape-to-latexmk))
