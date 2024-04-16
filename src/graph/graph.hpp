@@ -33,12 +33,19 @@ class Graph {
         void clear() { nodes.clear(); }
 
 
+        /**
+        * @brief returns the number of nodes
+        */
+        size_t size() { return nodes.size(); }
+
+
         /* overload << operator */
         friend std::ostream & operator << (std::ostream & out, Graph const & graph) {
-            out << "{";
+            out << "[";
             for (size_t i = 0; i < graph.nodes.size(); ++i) {
                 // print connected nodes
-                out << i << ": " << "[";
+                // out << i << ": " << "[";
+                out << "[";
                 size_t j = 0;
                 for (auto & node : graph.nodes[i]) {
                     out << node;
@@ -53,7 +60,7 @@ class Graph {
                     out << ", ";
                 }
             }
-            out << "}";
+            out << "]";
 
             return out;
         }
@@ -64,13 +71,13 @@ class Graph {
         /**
         * @brief PATH(u, v) using Depth First Search
         */
-        bool path_dfs(int u, int v);
+        bool path_dfs(int u, int v) const;
 
 
     protected:  // can be accessed by children
         std::vector<std::set<int>> nodes;  // list of adjacent nodes (for each node)
 
-        bool _path_dfs(int u, int v, std::set<int> & visited);
+        bool _path_dfs(int u, int v, std::set<int> & visited) const;
 };
 
 

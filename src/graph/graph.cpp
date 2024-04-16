@@ -60,7 +60,7 @@ void RandomUndirectedGraph::add_random_node(float prob_edge) {
 }
 
 
-bool Graph::_path_dfs(int u, int v, std::set<int> & visited) {
+bool Graph::_path_dfs(int u, int v, std::set<int> & visited) const{
     if (nodes[u].contains(v)) return true;
     visited.insert(u);
 
@@ -74,7 +74,7 @@ bool Graph::_path_dfs(int u, int v, std::set<int> & visited) {
     return false;
 }
 
-bool Graph::path_dfs(int u, int v) {
+bool Graph::path_dfs(int u, int v) const {
     // wrapper that initializes the set
     assert(u < static_cast<int>(nodes.size()));
     assert(v < static_cast<int>(nodes.size()));
