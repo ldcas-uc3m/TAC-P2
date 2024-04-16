@@ -13,50 +13,50 @@
 
 class Graph {
     public:
-        Graph(): nodes {} { }
+        Graph(): edges {} { }
 
         /* setup functions */
 
         /**
-        * @brief initializes the graph with the specified nodes and edges
+        * @brief initializes the graph with the specified adjacency matrix
         */
         void init(std::initializer_list<std::initializer_list<int>> new_nodes);
 
         /**
-        * @brief adds a node to the graph
+        * @brief adds a node to the graph, given the adjacency vector
         */
         void add_node(std::initializer_list<int> node);
 
         /**
         * @brief clears the graph
         */
-        void clear() { nodes.clear(); }
+        void clear() { edges.clear(); }
 
 
         /**
         * @brief returns the number of nodes
         */
-        size_t size() { return nodes.size(); }
+        size_t size() { return edges.size(); }
 
 
         /* overload << operator */
-        friend std::ostream & operator << (std::ostream & out, Graph const & graph) {
+        friend std::ostream & operator << (std::ostream & out, const Graph & graph) {
             out << "[";
-            for (size_t i = 0; i < graph.nodes.size(); ++i) {
+            for (size_t i = 0; i < graph.edges.size(); ++i) {
                 // print connected nodes
                 // out << i << ": " << "[";
                 out << "[";
                 size_t j = 0;
-                for (auto & node : graph.nodes[i]) {
+                for (auto & node : graph.edges[i]) {
                     out << node;
-                    if (j < graph.nodes[i].size() - 1) {  // not last element
+                    if (j < graph.edges[i].size() - 1) {  // not last element
                         out << ", ";
                     }
                     ++j;
                 }
                 out << "]";
 
-                if (i < graph.nodes.size() - 1) {  // not last element
+                if (i < graph.edges.size() - 1) {  // not last element
                     out << ", ";
                 }
             }
@@ -75,7 +75,7 @@ class Graph {
 
 
     protected:  // can be accessed by children
-        std::vector<std::set<int>> nodes;  // list of adjacent nodes (for each node)
+        std::vector<std::vector<int>> edges;  // adjacency matrix (1 = edge, 0 = no edge)
 
         bool _path_dfs(int u, int v, std::set<int> & visited) const;
 };
