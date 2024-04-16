@@ -11,6 +11,8 @@ std::string FLAGhelpstring = "";
 
 
 
+// TODO: templetarize
+
 void parseFlag(int argc, char** argv, std::string name, bool & val) {
   std::string token;
   bool found = false;

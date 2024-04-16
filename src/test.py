@@ -4,7 +4,7 @@ import json
 import os
 import platform
 import logging
-from typing import Callable
+from typing import Callable, Literal, Annotated
 from itertools import product
 
 import numpy as np
@@ -23,9 +23,8 @@ logger.addHandler(handler)
 
 
 REPO_ROOT = Path(__file__).parent.parent
-# TURING_EXEC: Path = REPO_ROOT/f"turing-machine-simulator/turing{'.exe' if platform.system() == 'Windows' else ''}"
+SIMULATOR_EXEC: Path = REPO_ROOT/f"build/src/p2{'.exe' if platform.system() == 'Windows' else ''}"
 DATA_FOLDER = REPO_ROOT/"data/"
-TM_FOLDER = REPO_ROOT/"src/tm/"
 
 if os.path.exists(REPO_ROOT/"report"):
     IMAGE_FOLDER = REPO_ROOT/"report/img/"
@@ -40,46 +39,45 @@ else:
 # TEST FUNCTIONS
 # ==============
 
-# def tests(file: Path, inputs: list[str], ntapes: int = 0) -> pd.DataFrame:
-#     """
-#     Runs the specified `inputs` through the Turing Machine in `file`, on the Turing Machine simulator in `TURING_EXEC`, and returns the results.
+def test(n: int, p: Annotated[float, "0 < p < 1"], algorithm: Literal["DFS", "PATH-DFS", "PATH-FW", "CLIQUE", "SAT-CLIQUE"], iterations: int) -> pd.DataFrame:
+    """
+    Creates random graphs of size `n` with probability of edges `p`, and applies the selected algorithm for the specified number of `iterations`.
 
-#     :param file: Turing machine definition file path, in turingmachinesimulator.com format.
-#     :param inputs: List of inputs to the TM.
-#     :param ntapes: Number of tapes of the TM.
+    :param n: Size of the graph.
+    :param p: Probability of an edge between two nodes, between `0` and `1`.
+    :param algorithm: Algorithm to apply.
+    :param iterations: Number of tests.
 
-#     :return: DataFrame with columns {n, steps, result}
-#     """
+    :return: DataFrame with columns {n, result, duration}
+    """
 
-#     results = pd.DataFrame(
-#         columns=[
-#             'input',
-#             'n',
-#             'steps',
-#             *[f'result{i}' for i in range(ntapes)]
-#         ]
-#     )
+    results = pd.DataFrame(
+        columns=[
+            'n',
+            'result',
+            'duration'
+        ]
+    )
 
-#     for input in inputs:
-#         tm_result = json.loads(subprocess.check_output([TURING_EXEC, str(file), input, "--json"]))
+    tests: dict = json.loads(subprocess.check_output([
+        SIMULATOR_EXEC,
+        f"--n={n}",
+        f"--p={p}",
+        f"--algorithm={algorithm}",
+        f"--iterations={iterations}",
+        "--nograph"
+    ]))['tests']
 
-#         if not tm_result["accepted"]:
-#             logger.error(f"Input '{input}' for TM {file} was not accepted")
-#             continue
-
-#         r = {
-#             'input': input,
-#             'n': len(input),
-#             'steps': tm_result["steps"],
-#             **{f'result{i}': tm_result["tapes"][i].strip("_") for i in range(ntapes)}
-#         }
-
-
-#         # append to results
-#         results.loc[len(results)] = r
+    for t in tests:
+        # append to df
+        results.loc[len(results)] = {
+            'n': n,
+            'result': t['results'],
+            'duration': t['duration']
+        }
 
 
-#     return results
+    return results
 
 
 
@@ -183,7 +181,7 @@ def plot_functions(
 
 
 if __name__ == "__main__":
-    # if not TURING_EXEC.exists():
-    #     exit(f"TM simulator executable not found at {TURING_EXEC}. Have you run make?")
+    if not SIMULATOR_EXEC.exists():
+        exit(f"TM simulator executable not found at {SIMULATOR_EXEC}. Have you run CMake?")
 
     pass

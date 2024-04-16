@@ -60,7 +60,7 @@ void test(int n, float p, int iter, int u, int v, path_f func, bool print_graph)
 DEFINE_int(n, 5, "size of the graph");
 DEFINE_float(p, 0.5, "probability of an edge between two nodes");
 DEFINE_int(iterations, 1, "number of iterations to execute");
-DEFINE_string(algorithm, "DFS", "algorithm to apply (DFS)");
+DEFINE_string(algorithm, "PATH-DFS", "algorithm to apply (PATH-DFS, PATH-FW, CLIQUE, SAT-CLIQUE)");
 DEFINE_bool(graph, true, "output the graph");
 DEFINE_bool(help, false, "show a list of command-line options");
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
     path_f f;
 
-    if (FLAG_algorithm == "DFS") { 
+    if (FLAG_algorithm == "PATH-DFS") { 
         f = &RandomUndirectedGraph::path_dfs; 
     }
     else {
