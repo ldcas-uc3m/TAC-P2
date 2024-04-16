@@ -67,6 +67,8 @@ Estudio de k-Clique. Se pide algo similar. Incluir estudio en su vertiente de Sa
 ## Installation and execution
 
 
+### Running the C++ simulator
+<!-- TODO -->
 
 
 ### Running the Python tests
