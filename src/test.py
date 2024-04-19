@@ -7,6 +7,7 @@ import logging
 from typing import Callable, Literal, Annotated
 from itertools import product
 
+import statistics
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -72,7 +73,7 @@ def test(n: int, p: Annotated[float, "0 < p < 1"], algorithm: Literal["DFS", "PA
         # append to df
         results.loc[len(results)] = {
             'n': n,
-            'result': t['results'],
+            'result': t['result'],
             'duration': t['duration']
         }
 
@@ -175,13 +176,54 @@ def plot_functions(
 
     plt.close()
 
+# Function to calculate the average duration depending on the n size (Nomber of vertices of the graph)
+def test_n (n_min, n_max, probability, algorithm):
 
+    results = pd.DataFrame(
+        columns=[
+            'n',
+            'duration'
+        ]
+    )
 
+    for n in range(n_min, n_max+1):
+
+        durations = []
+
+        # For each graph size, it is executed 10 times and then calculate the average execution time
+        for index in range(100):
+            run = test(n, probability, algorithm, 1)
+            durations.append(run['duration'][0])
+
+        avg_duration = statistics.mean(durations)
+ 
+        #In the dataframe is saved the average time needed for each graph size
+        new_values = pd.DataFrame({'n': [n], 'duration': [avg_duration]})
+
+        results = pd.concat([results, new_values], ignore_index=True)
+
+    return results
+        
 
 
 
 if __name__ == "__main__":
     if not SIMULATOR_EXEC.exists():
         exit(f"TM simulator executable not found at {SIMULATOR_EXEC}. Have you run CMake?")
+
+
+  
+    result = test(4, 0.5, "PATH-DFS", 1)
+    print('Result: ', result['result'][0])
+    print('Duration: ', result['duration'][0])
+
+    test_perormance = test_n(2,15,0.5,"PATH-DFS")
+    print('Sizes: ', test_perormance['n'])
+    print('Durations: ', test_perormance['duration'])
+
+    plot_dataframes({'test': test_perormance}, 'n', 'duration', IMAGE_FOLDER/'performace_test_n')
+
+    #plot_dataframes(result, )
+    
 
     pass
