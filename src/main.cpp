@@ -95,6 +95,9 @@ int main(int argc, char* argv[]) {
     if (FLAG_algorithm == "PATH-DFS") { 
         f = &RandomUndirectedGraph::path_dfs; 
     }
+    else if (FLAG_algorithm == "PATH-FW") {
+        f = &RandomUndirectedGraph::path_fw; 
+    }
     else {
         std::cerr << "Unknown algorithm '" << FLAG_algorithm << "'\n";
         return -1;

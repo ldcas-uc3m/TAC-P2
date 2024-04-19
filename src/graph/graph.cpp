@@ -3,6 +3,10 @@
 #include <random>
 #include <functional>
 #include <set>
+#include <limits>
+#include <algorithm>
+#include <array>
+#include <iostream>
 
 
 std::random_device rd;
@@ -64,6 +68,11 @@ void RandomUndirectedGraph::add_random_node(float prob_edge) {
 }
 
 
+
+
+/* PATH(u,v) */
+
+
 bool Graph::_path_dfs(int u, int v, std::set<int> & visited) const{
     if (u == v) return true;
     visited.insert(u);
@@ -85,4 +94,46 @@ bool Graph::path_dfs(int u, int v) const {
 
     std::set<int> visited {};
     return _path_dfs(u, v, visited);
+}
+
+
+
+
+bool Graph::path_fw(int u, int v) const {
+    assert(u < static_cast<int>(edges.size()));
+    assert(v < static_cast<int>(edges.size()));
+
+    if (u == v) return true;
+
+    // constexpr int infinity {std::numeric_limits<int>::max()};
+    const int infinity = 100;
+
+    // initialize distances to infinity
+    std::vector<std::vector<int>> distance {};
+    distance.resize(edges.size());
+    for (auto & vec : distance) {
+        vec.resize(edges.size(), infinity);
+    }
+
+    // set weights
+    for (size_t u = 0; u < edges.size(); ++u) {
+        for (size_t v = 0; v < edges.size(); ++v) {
+            if (u == v) {
+                distance[u][v] = 0;
+            }
+            else if (edges[u][v] == 1) {
+                distance[u][v] = 1;
+            }
+        }
+    }
+
+    for (size_t k = 0; k < edges.size(); ++k) {
+        for (size_t i = 0; i < edges.size(); ++i) {
+            for (size_t j = 0; j < edges.size(); ++j) {
+                distance[i][j] = std::min(distance[i][j], distance[i][k] + distance[k][j]);
+            }
+        }
+    }
+
+    return distance[u][v] < infinity;
 }
