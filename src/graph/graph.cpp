@@ -105,31 +105,33 @@ bool Graph::path_fw(int u, int v) const {
 
     if (u == v) return true;
 
-    // constexpr int infinity {std::numeric_limits<int>::max()};
-    const int infinity = 100;
+    constexpr int infinity {std::numeric_limits<int>::max()};
 
-    // initialize distances to infinity
     std::vector<std::vector<int>> distance {};
-    distance.resize(edges.size());
-    for (auto & vec : distance) {
-        vec.resize(edges.size(), infinity);
-    }
 
-    // set weights
+    // initialize distances
     for (size_t u = 0; u < edges.size(); ++u) {
+        distance.push_back({});
+        distance[u].reserve(edges.size());
         for (size_t v = 0; v < edges.size(); ++v) {
+            int d;
             if (u == v) {
-                distance[u][v] = 0;
+                d = 0;
             }
-            else if (edges[u][v] == 1) {
-                distance[u][v] = 1;
+            else if (edges[u][v] != 0) {
+                d = edges[u][v];
             }
+            else d = infinity;
+
+            distance[u].push_back(d);
         }
     }
 
+    // compute distances
     for (size_t k = 0; k < edges.size(); ++k) {
         for (size_t i = 0; i < edges.size(); ++i) {
             for (size_t j = 0; j < edges.size(); ++j) {
+                if ((distance[i][k] == infinity) || (distance[k][j] == infinity)) continue;
                 distance[i][j] = std::min(distance[i][j], distance[i][k] + distance[k][j]);
             }
         }
