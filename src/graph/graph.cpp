@@ -42,6 +42,11 @@ void Graph::add_node(std::initializer_list<int> node) {
 void RandomUndirectedGraph::add_random_node(float prob_edge) {
     assert(prob_edge > 0 && prob_edge <= 1);
 
+    if (edges.empty()) {  // initialize
+        edges.push_back({0});
+        return;
+    }
+
     // create new empty node
     std::vector<int> new_node {};
 
@@ -53,6 +58,7 @@ void RandomUndirectedGraph::add_random_node(float prob_edge) {
         new_node.push_back(edge);
     }
 
+    new_node.push_back(0);  // it's not connected to itself
     edges.push_back(new_node);
 
 }

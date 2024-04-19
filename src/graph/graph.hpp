@@ -74,6 +74,12 @@ class Graph {
         bool path_dfs(int u, int v) const;
 
 
+        /**
+        * @brief PATH(u, v) using Floyd-Warshall
+        */
+        bool path_fw(int u, int v) const;
+
+
     protected:  // can be accessed by children
         std::vector<std::vector<int>> edges;  // adjacency matrix (1 = edge, 0 = no edge)
 
