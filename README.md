@@ -95,13 +95,15 @@ This requires Python 3.10+.
    If you're in Windows, we recommend you to install [WSL2](https://learn.microsoft.com/es-es/windows/wsl/install) and run "in Linux", or use GCC through [MinGW-W64](https://www.mingw-w64.org/), you can find compiled binaries in the [niXman/mingw-builds-binaries repo](https://github.com/niXman/mingw-builds-binaries).  
    Build:
     - Linux (through [make](https://www.gnu.org/software/make/manual/make.html)):
-        ```powershell
+        ```bash
+        mkdir build
         cd build
         cmake ..
         make
         ```
     - Windows/Linux (through [ninja-build](https://ninja-build.org/)):
         ```powershell
+        mkdir build
         cd build
         cmake .. -G Ninja
         cmake --build .
