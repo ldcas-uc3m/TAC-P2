@@ -109,8 +109,12 @@ def plot_dataframes(
         print(dfs.items())
         ax.plot(df[x_column], df[y_column], marker='o', label=name)
 
+
+        if x_column == 'n':
         # Añadir ticks en el eje x para cada punto único en los datos de x
-        x_ticks = df[x_column].dropna().astype(int).unique()  # Asegura la conversión a int
+            x_ticks = df[x_column].dropna().astype(int).unique()  # Asegura la conversión a int
+        else:
+            x_ticks = df[x_column].dropna().astype(float).unique()
         ax.set_xticks(x_ticks)
 
     # Determinar la paleta de colores dependiendo del número de series de datos
@@ -210,6 +214,37 @@ def test_n (n_min, n_max, probability, algorithm):
     return results
         
 
+# Function to calculate the average duration depending on the n size (Nomber of vertices of the graph)
+def test_p (n, algorithm):
+
+    results = pd.DataFrame(
+        columns=[
+            'n',
+            'p',
+            'duration'
+        ]
+    )
+
+    p = 0.1
+    while p <= 1:
+
+        durations = []
+
+        # For each graph size, it is executed 10 times and then calculate the average execution time
+        for index in range(200):
+            run = test(n, p, algorithm, 1)
+            durations.append(run['duration'][0])
+
+        avg_duration = statistics.mean(durations)
+ 
+        #In the dataframe is saved the average time needed for each graph size
+        new_values = pd.DataFrame({'n': [n], 'p': [p], 'duration': [avg_duration]})
+        p+=0.1
+        print('P: ', p)
+        results = pd.concat([results, new_values], ignore_index=True)
+
+    return results
+
 
 
 if __name__ == "__main__":
@@ -222,17 +257,40 @@ if __name__ == "__main__":
     #print('Result: ', result['result'][0])
     #print('Duration: ', result['duration'][0])
 
-    #----PATH-DFS test----
+    #----PATH-DFS test n----
     
     # 50% Probability of connect each node 
-    test_performance = test_n(2,20,0.5,"PATH-DFS")
+    test_DFS = test_n(2,20,0.5,"PATH-DFS")
 
     # 100% Probability of connect each node, worst case 
-    test_performance_worst = test_n(2,20,1,"PATH-DFS")
+    test_DFS_worst = test_n(2,20,1,"PATH-DFS")
 
-    plot_dataframes({'PATH-DFS': test_performance, 'PATH-DFS-WORST-CASE': test_performance_worst}, 'n', 'duration', IMAGE_FOLDER/'performace_test_n')
+    # Plot graph
+    plot_dataframes({'PATH-DFS': test_DFS, 'PATH-DFS-WORST-CASE': test_DFS_worst}, 'n', 'duration', IMAGE_FOLDER/'performace_DFS_n')
 
-   
+    #----PATH-DFS test p----
     
+    # 50% Probability of connect each node 
+    test_DFS = test_p(5,"PATH-DFS")
+
+    # Plot graph
+    plot_dataframes({'PATH-DFS': test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performace_DFS_p')
+
+
+    #----PATH-FW test n----
+
+    # 50% Probability of connect each node 
+    test_FW = test_n(2,20,0.5,"PATH-FW")
+
+    # Plot graph
+    plot_dataframes({'PATH-FW': test_FW}, 'n', 'duration', IMAGE_FOLDER/'performace_FW_n')
+
+    #----PATH-FW test p----
+    
+    # 50% Probability of connect each node 
+    test_FW = test_p(5,"PATH-FW")
+
+    # Plot graph
+    plot_dataframes({'PATH-FW': test_FW}, 'p', 'duration', IMAGE_FOLDER/'performace_FW_p')
 
     pass
