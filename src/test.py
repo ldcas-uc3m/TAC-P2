@@ -128,7 +128,7 @@ def plot_dataframes(
 
     # Agregar etiquetas
     ax.set_xlabel(x_column)
-    ax.set_ylabel(y_column)
+    ax.set_ylabel(y_column + ' (ns)')
 
     ax.legend()
 
@@ -186,13 +186,12 @@ def plot_functions(
 
     plt.close()
 
-
-
-def test_n(n_min, n_max, probability, algorithm):
+def test_n (n_min, n_max, probability, algorithm, n_tests):
     """
     Function to calculate the average duration depending on the n size (Nomber of vertices of the graph)
     """
 
+    # Datframe to save the result
     results = pd.DataFrame(
         columns=[
             'n',
@@ -200,29 +199,30 @@ def test_n(n_min, n_max, probability, algorithm):
         ]
     )
 
+    
     for n in range(n_min, n_max+1):
+
         print(f"n: {n}, p: {probability}", end='\r')
-        durations = []
 
-        # TODO: FOR DEAR GOD CHANGE THIS AND USE THE FUCKING iterations PARAMETER
-        # For each graph size, it is executed 10 times and then calculate the average execution time
-        for index in range(200):
-            run = test(n, probability, algorithm, 1)
-            durations.append(run['duration'][0])
+        #Run a battery of tests with the n given and the n_tests number of times given
+        run = test(n, probability, algorithm, n_tests)
+        
+        #Take the average duration for each n size
+        average_durations = run['duration'].mean()
 
-        avg_duration = statistics.mean(durations)
-
-        #In the dataframe is saved the average time needed for each graph size
-        new_values = pd.DataFrame({'n': [n], 'duration': [avg_duration]})
-
-        results = pd.concat([results, new_values], ignore_index=True)
+        #Save the results into a dataframe
+        new_row = pd.DataFrame({
+            'n': [n],
+            'duration': [average_durations]
+        })
+        results = pd.concat([results, new_row], ignore_index=True)
 
         sys.stdout.write("\033[K")  # clear line
 
     return results
+        
 
-
-def test_p(n, algorithm):
+def test_p (n, algorithm, n_tests):
     """
     Function to calculate the average duration depending on the p (probability of edge between two nodes)
     """
@@ -240,18 +240,19 @@ def test_p(n, algorithm):
         print(f"n: {n}, p: {p}", end='\r')
         durations = []
 
-        # TODO: FOR DEAR GOD CHANGE THIS AND USE THE FUCKING iterations PARAMETER
+         
         # For each graph size, it is executed 10 times and then calculate the average execution time
-        for index in range(200):
+        for index in range(n_tests):
             run = test(n, p, algorithm, 1)
             durations.append(run['duration'][0])
-
+        
         avg_duration = statistics.mean(durations)
 
         #In the dataframe is saved the average time needed for each graph size
         new_values = pd.DataFrame({'n': [n], 'p': [p], 'duration': [avg_duration]})
         p+=0.1
         results = pd.concat([results, new_values], ignore_index=True)
+        
 
         sys.stdout.write("\033[K")  # clear line
 
@@ -263,6 +264,9 @@ if __name__ == "__main__":
     if not SIMULATOR_EXEC.exists():
         exit(f"TM simulator executable not found at {SIMULATOR_EXEC}. Have you run CMake?")
 
+    default_probability = 0.5
+    DFS_worst_probability = 1.0
+    default_n = 5
 
     #----Unitary test----
     #result = test(4, 0.5, "PATH-DFS", 1)
@@ -271,40 +275,44 @@ if __name__ == "__main__":
 
     logger.info("Testing PATH-DFS...")
     #----PATH-DFS test n----
-
+    
     # 50% Probability of connect each node
-    test_DFS = test_n(2,20,0.5,"PATH-DFS")
+    test_DFS = test_n(2,20,default_probability,"PATH-DFS", 300)
 
-    # 100% Probability of connect each node, worst case
-    test_DFS_worst = test_n(2,20,1,"PATH-DFS")
+    # 100% Probability of connect each node, worst case 
+    test_DFS_worst = test_n(2,20,DFS_worst_probability ,"PATH-DFS",300)
 
     # Plot graph
-    plot_dataframes({'PATH-DFS': test_DFS, 'PATH-DFS-WORST-CASE': test_DFS_worst}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
+    plot_dataframes({'PATH-DFS (p = %.1f)' % default_probability: test_DFS, 'PATH-DFS-WORST-CASE (p = %.1f)' % DFS_worst_probability: test_DFS_worst}, 'n', 'duration', IMAGE_FOLDER/'performace_DFS_n.svg')
+
 
     #----PATH-DFS test p----
-
-    # 50% Probability of connect each node
-    test_DFS = test_p(5,"PATH-DFS")
+    
+    # 50% Probability of connect each node 
+    test_DFS = test_p(default_n,"PATH-DFS", 300)
 
     # Plot graph
-    plot_dataframes({'PATH-DFS': test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performance_DFS_p.svg')
-
+    plot_dataframes({'PATH-DFS (n =  %.1f)' % default_n: test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performace_DFS_p.svg')
 
     logger.info("Testing PATH-FW...")
+
+
     #----PATH-FW test n----
 
-    # 50% Probability of connect each node
-    test_FW = test_n(2,20,0.5,"PATH-FW")
+    # 50% Probability of connect each node 
+    test_FW = test_n(2,20,default_probability,"PATH-FW",300)
+
+    #test_FW_worst= test_n(2,20,1,"PATH-FW",300)
 
     # Plot graph
-    plot_dataframes({'PATH-FW': test_FW}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
+    plot_dataframes({'PATH-FW (p = %.1f)' % default_probability: test_FW}, 'n', 'duration', IMAGE_FOLDER/'performace_FW_n.svg')
 
     #----PATH-FW test p----
-
-    # 50% Probability of connect each node
-    test_FW = test_p(5,"PATH-FW")
+    
+    # 50% Probability of connect each node 
+    test_FW = test_p(default_n,"PATH-FW", 300)
 
     # Plot graph
-    plot_dataframes({'PATH-FW': test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_FW_p.svg')
+    plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performace_FW_p.svg')
 
     # TODO: save data to CSV
