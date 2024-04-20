@@ -91,6 +91,7 @@ def plot_dataframes(
     dfs: dict[str, pd.DataFrame],
     x_column: str,
     y_column: str,
+    algorithm:str,
     save_file: str | None = None
 ):
     """
@@ -106,15 +107,20 @@ def plot_dataframes(
     fig, ax = plt.subplots()
 
     for name, df in dfs.items():
-        ax.plot(df[x_column], df[y_column], marker='o', label=name)
+        print(dfs.items())
+        ax.plot(df[x_column], df[y_column], marker='o', label=algorithm)
 
-    # automatic colors
+        # Añadir ticks en el eje x para cada punto único en los datos de x
+        x_ticks = df[x_column].dropna().astype(int).unique()  # Asegura la conversión a int
+        ax.set_xticks(x_ticks)
+
+    # Determinar la paleta de colores dependiendo del número de series de datos
     if len(dfs) <= len(mcolors.BASE_COLORS):
-        pallete = mcolors.BASE_COLORS
+        palette = mcolors.BASE_COLORS
     else:
-        pallete = mcolors.XKCD_COLORS
+        palette = mcolors.XKCD_COLORS
 
-    ax.set_prop_cycle(color=pallete)
+    ax.set_prop_cycle(color=palette)
 
     # Agregar etiquetas
     ax.set_xlabel(x_column)
@@ -191,7 +197,7 @@ def test_n (n_min, n_max, probability, algorithm):
         durations = []
 
         # For each graph size, it is executed 10 times and then calculate the average execution time
-        for index in range(100):
+        for index in range(200):
             run = test(n, probability, algorithm, 1)
             durations.append(run['duration'][0])
 
@@ -212,18 +218,18 @@ if __name__ == "__main__":
         exit(f"TM simulator executable not found at {SIMULATOR_EXEC}. Have you run CMake?")
 
 
-  
-    result = test(4, 0.5, "PATH-DFS", 1)
-    print('Result: ', result['result'][0])
-    print('Duration: ', result['duration'][0])
+    #----Unitary test----
+    #result = test(4, 0.5, "PATH-DFS", 1)
+    #print('Result: ', result['result'][0])
+    #print('Duration: ', result['duration'][0])
 
-    test_perormance = test_n(2,15,0.5,"PATH-DFS")
-    print('Sizes: ', test_perormance['n'])
-    print('Durations: ', test_perormance['duration'])
+    #----PATH-DFS test---- 
+    test_perormance = test_n(2,20,0.5,"PATH-DFS")
+    #print('Sizes: ', test_perormance['n'])
+    #print('Durations: ', test_perormance['duration'])
+    plot_dataframes({'test': test_perormance}, 'n', 'duration', "PATH-DFS", IMAGE_FOLDER/'performace_test_n')
 
-    plot_dataframes({'test': test_perormance}, 'n', 'duration', IMAGE_FOLDER/'performace_test_n')
-
-    #plot_dataframes(result, )
+   
     
 
     pass
