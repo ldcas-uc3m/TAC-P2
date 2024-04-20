@@ -91,7 +91,6 @@ def plot_dataframes(
     dfs: dict[str, pd.DataFrame],
     x_column: str,
     y_column: str,
-    algorithm:str,
     save_file: str | None = None
 ):
     """
@@ -108,7 +107,7 @@ def plot_dataframes(
 
     for name, df in dfs.items():
         print(dfs.items())
-        ax.plot(df[x_column], df[y_column], marker='o', label=algorithm)
+        ax.plot(df[x_column], df[y_column], marker='o', label=name)
 
         # Añadir ticks en el eje x para cada punto único en los datos de x
         x_ticks = df[x_column].dropna().astype(int).unique()  # Asegura la conversión a int
@@ -223,11 +222,15 @@ if __name__ == "__main__":
     #print('Result: ', result['result'][0])
     #print('Duration: ', result['duration'][0])
 
-    #----PATH-DFS test---- 
-    test_perormance = test_n(2,20,0.5,"PATH-DFS")
-    #print('Sizes: ', test_perormance['n'])
-    #print('Durations: ', test_perormance['duration'])
-    plot_dataframes({'test': test_perormance}, 'n', 'duration', "PATH-DFS", IMAGE_FOLDER/'performace_test_n')
+    #----PATH-DFS test----
+    
+    # 50% Probability of connect each node 
+    test_performance = test_n(2,20,0.5,"PATH-DFS")
+
+    # 100% Probability of connect each node, worst case 
+    test_performance_worst = test_n(2,20,1,"PATH-DFS")
+
+    plot_dataframes({'PATH-DFS': test_performance, 'PATH-DFS-WORST-CASE': test_performance_worst}, 'n', 'duration', IMAGE_FOLDER/'performace_test_n')
 
    
     
