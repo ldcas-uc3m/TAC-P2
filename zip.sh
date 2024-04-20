@@ -9,7 +9,7 @@ REPORT_FILENAME="memoria.pdf"
 
 [ -e $OUTFILE ] && rm $OUTFILE  # remove if exists already
 
-generate data
+# generate data
 echo "Building simulator..."
 cd build
 make --silent
