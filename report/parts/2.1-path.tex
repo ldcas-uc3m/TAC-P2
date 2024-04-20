@@ -1,1 +1,24 @@
-\section{Estudio de PATH}
+\section{Estudio de PATH}\label{sec:path}
+
+
+\subsection{Depth-First Search}\label{subsec:dfs}
+El algoritmo DFS\supercite{hopcroft1983data} es un algoritmo para recorrer un grafo `en profundidad', y puede ser aplicado a nuestro problema $\mathrm{PATH}(u,v)$ recorriendo el grafo desde el nodo origen ($u$) y comprobando a cada paso si hemos llegado al nodo destino ($v$). En caso de que no lleguemos nunca, no hay camino.
+
+\subsubsection*{Evaluación analítica del algoritmo}
+Para analizar correctamente el algoritmo y sacar una cota asintótica superior, debemos de analizar el peor caso, % TODO: citation needed
+el cual se da cuando el $u$ es el primer nodo, y el grafo está completamente conectado, excepto el nodo $v$, el cual está exclusivamente conectado al último nodo.
+
+
+
+\subsection*{Evaluación empírica}
+
+\plotperformance{DFS}
+
+
+
+\subsection{Floyd-Warshall}\label{subsec:fw}
+
+
+\subsection*{Evaluación empírica}
+
+\plotperformance{FW}

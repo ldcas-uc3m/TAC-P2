@@ -53,14 +53,14 @@ Para ello debemos disponer:
 
 
 ### Tarea 8
-Estudio para PATH:
+Estudio para `PATH`:
 1. Determinar cómo se comportan las distancias mínimas para todo el grafo cuando se varía la conectividad de los nodos
-2. Determinar el Coste Computacional de obtener PATH(p,q) para todos los nodos del grafo cuando
-    1. éste aumenta de tamaño
-    2. varía la conectividad para un tamaño fijado
+2. Determinar el Coste Computacional de obtener `PATH(u,v)` para todos los nodos del grafo cuando
+    1. Éste aumenta de tamaño
+    2. Varía la conectividad para un tamaño fijado
 
 ### Tarea 9
-Estudio de k-Clique. Se pide algo similar. Incluir estudio en su vertiente de Sat-Solver.
+Estudio de `K-Clique`. Se pide algo similar. Incluir estudio en su vertiente de Sat-Solver.
 
 
 

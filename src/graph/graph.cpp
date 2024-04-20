@@ -11,7 +11,7 @@
 
 std::random_device rd;
 std::uniform_int_distribution<int> dist(1, 100);
-std::mt19937 engine(rd()); // Mersenne twister MT19937
+std::mt19937 engine(rd());  // Mersenne twister MT19937
 auto generator = std::bind(dist, engine);
 
 

@@ -4,22 +4,20 @@
 
 set -e  # exit on error
 
-OUTFILE="../MT_3_Arnaiz_Casais.zip"
+OUTFILE="../OPT01_84_Arnaiz_Casais.zip"
 REPORT_FILENAME="memoria.pdf"
 
 [ -e $OUTFILE ] && rm $OUTFILE  # remove if exists already
 
-# generate data
-# echo "Building turing-machine-simulator/..."
-# cd turing-machine-simulator
-# make --silent
-# cd ..
+generate data
+echo "Building simulator..."
+cd build
+make --silent
+cd ..
 
-# echo "Performing tests..."
-# source .venv/bin/activate
-# python3 src/test.py || exit
-
-# rm turing-machine-simulator/turing
+echo "Performing tests..."
+source .venv/bin/activate
+python3 src/test.py || exit
 
 
 # compile the report (and save it to root folder)

@@ -60,8 +60,8 @@
 %----------
 
 \if@langes@pp  % spanish
-	\RequirePackage[spanish, es-tabla]{babel}
-	\RequirePackage[babel, spanish=spanish]{csquotes}
+	\RequirePackage[spanish,es-tabla,es-noindentfirst]{babel}
+	\RequirePackage[babel,spanish=spanish]{csquotes}
 	\selectlanguage{spanish}
 
 	\def\of{de}
@@ -70,7 +70,7 @@
 
 \if@langen@pp  % english
 	\RequirePackage[english]{babel}
-	\RequirePackage[babel, english=american]{csquotes}
+	\RequirePackage[babel,english=american]{csquotes}
 	\selectlanguage{english}
 
 	\def\of{of}
@@ -251,7 +251,8 @@
 
 \RequirePackage{graphicx}
 \RequirePackage{float}
-\RequirePackage{svg}
+\RequirePackage{svg}  % SVG images support (requires inkscape)
+\RequirePackage{subcaption}  % \begin{subfigure}, etc.
 
 
 % Figures layout for engineering

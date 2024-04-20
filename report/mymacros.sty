@@ -1,8 +1,8 @@
 \ProvidesPackage{mymacros}[Auxiliary helper macros for the report]
 
 
-\newcommand{\footurl}[1]{
-  \footnote{\url{#1}}
+\newcommand{\footurl}[1]{%
+  \footnote{\url{#1}}%
 }
 
 
@@ -11,4 +11,23 @@
   % \addcontentsline{toc}{part}{Bibliografía}
   \printbibliography
   \newpage
+}
+
+
+% \plotperformance{algorithm}
+\newcommand{\plotperformance}[1] {
+  \begin{figure}[H]
+    \centering
+    \begin{subfigure}{.45\textwidth}
+      \centering
+      \includesvg[width=\linewidth]{performance_#1_n.svg}
+      \caption{Con respecto a $n$}
+    \end{subfigure}
+    \begin{subfigure}{.45\textwidth}
+      \centering
+      \includesvg[width=\linewidth]{performance_#1_p.svg}
+      \caption{Con respecto a $p$}
+    \end{subfigure}
+    \caption{Tiempo de ejecución del algoritmo #1}
+  \end{figure}
 }

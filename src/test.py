@@ -186,8 +186,12 @@ def plot_functions(
 
     plt.close()
 
-# Function to calculate the average duration depending on the n size (Nomber of vertices of the graph)
-def test_n (n_min, n_max, probability, algorithm):
+
+
+def test_n(n_min, n_max, probability, algorithm):
+    """
+    Function to calculate the average duration depending on the n size (Nomber of vertices of the graph)
+    """
 
     results = pd.DataFrame(
         columns=[
@@ -200,13 +204,14 @@ def test_n (n_min, n_max, probability, algorithm):
         print(f"n: {n}, p: {probability}", end='\r')
         durations = []
 
+        # TODO: FOR DEAR GOD CHANGE THIS AND USE THE FUCKING iterations PARAMETER
         # For each graph size, it is executed 10 times and then calculate the average execution time
         for index in range(200):
             run = test(n, probability, algorithm, 1)
             durations.append(run['duration'][0])
 
         avg_duration = statistics.mean(durations)
- 
+
         #In the dataframe is saved the average time needed for each graph size
         new_values = pd.DataFrame({'n': [n], 'duration': [avg_duration]})
 
@@ -215,10 +220,12 @@ def test_n (n_min, n_max, probability, algorithm):
         sys.stdout.write("\033[K")  # clear line
 
     return results
-        
 
-# Function to calculate the average duration depending on the n size (Nomber of vertices of the graph)
-def test_p (n, algorithm):
+
+def test_p(n, algorithm):
+    """
+    Function to calculate the average duration depending on the p (probability of edge between two nodes)
+    """
 
     results = pd.DataFrame(
         columns=[
@@ -233,13 +240,14 @@ def test_p (n, algorithm):
         print(f"n: {n}, p: {p}", end='\r')
         durations = []
 
+        # TODO: FOR DEAR GOD CHANGE THIS AND USE THE FUCKING iterations PARAMETER
         # For each graph size, it is executed 10 times and then calculate the average execution time
         for index in range(200):
             run = test(n, p, algorithm, 1)
             durations.append(run['duration'][0])
 
         avg_duration = statistics.mean(durations)
- 
+
         #In the dataframe is saved the average time needed for each graph size
         new_values = pd.DataFrame({'n': [n], 'p': [p], 'duration': [avg_duration]})
         p+=0.1
@@ -263,40 +271,40 @@ if __name__ == "__main__":
 
     logger.info("Testing PATH-DFS...")
     #----PATH-DFS test n----
-    
+
     # 50% Probability of connect each node
     test_DFS = test_n(2,20,0.5,"PATH-DFS")
 
-    # 100% Probability of connect each node, worst case 
+    # 100% Probability of connect each node, worst case
     test_DFS_worst = test_n(2,20,1,"PATH-DFS")
 
     # Plot graph
-    plot_dataframes({'PATH-DFS': test_DFS, 'PATH-DFS-WORST-CASE': test_DFS_worst}, 'n', 'duration', IMAGE_FOLDER/'performace_DFS_n.svg')
+    plot_dataframes({'PATH-DFS': test_DFS, 'PATH-DFS-WORST-CASE': test_DFS_worst}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
 
     #----PATH-DFS test p----
-    
-    # 50% Probability of connect each node 
+
+    # 50% Probability of connect each node
     test_DFS = test_p(5,"PATH-DFS")
 
     # Plot graph
-    plot_dataframes({'PATH-DFS': test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performace_DFS_p.svg')
+    plot_dataframes({'PATH-DFS': test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performance_DFS_p.svg')
 
 
     logger.info("Testing PATH-FW...")
     #----PATH-FW test n----
 
-    # 50% Probability of connect each node 
+    # 50% Probability of connect each node
     test_FW = test_n(2,20,0.5,"PATH-FW")
 
     # Plot graph
-    plot_dataframes({'PATH-FW': test_FW}, 'n', 'duration', IMAGE_FOLDER/'performace_FW_n.svg')
+    plot_dataframes({'PATH-FW': test_FW}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
 
     #----PATH-FW test p----
-    
-    # 50% Probability of connect each node 
+
+    # 50% Probability of connect each node
     test_FW = test_p(5,"PATH-FW")
 
     # Plot graph
-    plot_dataframes({'PATH-FW': test_FW}, 'p', 'duration', IMAGE_FOLDER/'performace_FW_p.svg')
+    plot_dataframes({'PATH-FW': test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_FW_p.svg')
 
-    pass
+    # TODO: save data to CSV

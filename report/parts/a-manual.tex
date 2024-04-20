@@ -1,7 +1,8 @@
 \part{Apéndices}
 
-\section{Instalación y ejecución}
+\section*{Instalación y ejecución}
 
+\subsection*{Uso del simulador}
 
 
 \subsection*{Ejecución de los tests en Python}
@@ -26,13 +27,14 @@ source .venv/bin/activate
   \begin{verbatim}
 pip install -r requirements.txt
   \end{verbatim}
-%   \item Compila el Turing Machine Simulator\supercite{tmsimulator} con GNU/Make\footurl{https://www.gnu.org/software/make/}:
-%   \begin{verbatim}
-% cd turing-machine-simulator
-% make
-% cd ..
-%   \end{verbatim}
-%   Si estás en Windows, te recomendamos instalar WSL2\footurl{https://learn.microsoft.com/es-es/windows/wsl/install} y ejecutar `en Linux', o con GCC a través de MinGW-W64\footurl{https://www.mingw-w64.org/} (puedes encontrar binarios ya compilados en \url{https://github.com/niXman/mingw-builds-binaries}), compilando mediante el comando \texttt{gcc} que puedes encontrar dentro de \texttt{turing-machine-simulator/\allowbreak Makefile}.
+  \item Compila el simulador con CMake\footurl{https://cmake.org/} y ninja-build\footurl{https://ninja-build.org/}:
+  \begin{verbatim}
+mkdir build
+cd build
+cmake .. -G Ninja
+cmake --build .
+  \end{verbatim}
+  Si estás en Windows, te recomendamos instalar WSL2\footurl{https://learn.microsoft.com/es-es/windows/wsl/install} y ejecutar `en Linux', o con GCC a través de MinGW-W64\footurl{https://www.mingw-w64.org/} (puedes encontrar binarios ya compilados en \url{https://github.com/niXman/mingw-builds-binaries}).
   \item Ejecuta el \textit{script} con:
   \begin{verbatim}
 python3 src/test.py
