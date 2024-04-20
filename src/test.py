@@ -240,7 +240,7 @@ def test_p (n, algorithm, n_tests):
         print(f"n: {n}, p: {p}", end='\r')
         durations = []
 
-         
+        ''' 
         # For each graph size, it is executed 10 times and then calculate the average execution time
         for index in range(n_tests):
             run = test(n, p, algorithm, 1)
@@ -253,9 +253,26 @@ def test_p (n, algorithm, n_tests):
         p+=0.1
         results = pd.concat([results, new_values], ignore_index=True)
         
+        '''
+        #Run a battery of tests with the n given and the n_tests number of times given
+        run = test(n, p, algorithm, n_tests)
+        
+        #Take the average duration for each n size
+        average_durations = run['duration'].mean()
+
+        #Save the results into a dataframe
+        new_row = pd.DataFrame({
+            'n': [n],
+            'p': [p],
+            'duration': [average_durations]
+        })
+        results = pd.concat([results, new_row], ignore_index=True)
+
+        p+=0.1
 
         sys.stdout.write("\033[K")  # clear line
 
+    #print(results)
     return results
 
 
@@ -265,7 +282,7 @@ if __name__ == "__main__":
         exit(f"TM simulator executable not found at {SIMULATOR_EXEC}. Have you run CMake?")
 
     default_probability = 0.5
-    DFS_worst_probability = 1.0
+    DFS_worst_probability = 1
     default_n = 5
 
     #----Unitary test----
@@ -278,9 +295,11 @@ if __name__ == "__main__":
     
     # 50% Probability of connect each node
     test_DFS = test_n(2,20,default_probability,"PATH-DFS", 300)
+    test_DFS.to_csv(DATA_FOLDER/'test_DFS_n.csv', index=False)
 
     # 100% Probability of connect each node, worst case 
     test_DFS_worst = test_n(2,20,DFS_worst_probability ,"PATH-DFS",300)
+    test_DFS_worst.to_csv(DATA_FOLDER/'test_DFS_n_worst.csv', index=False)
 
     # Plot graph
     plot_dataframes({'PATH-DFS (p = %.1f)' % default_probability: test_DFS, 'PATH-DFS-WORST-CASE (p = %.1f)' % DFS_worst_probability: test_DFS_worst}, 'n', 'duration', IMAGE_FOLDER/'performace_DFS_n.svg')
@@ -289,7 +308,8 @@ if __name__ == "__main__":
     #----PATH-DFS test p----
     
     # 50% Probability of connect each node 
-    test_DFS = test_p(default_n,"PATH-DFS", 300)
+    test_DFS = test_p(default_n,"PATH-DFS", 500)
+    test_DFS.to_csv(DATA_FOLDER/'test_DFS_p.csv', index=False)
 
     # Plot graph
     plot_dataframes({'PATH-DFS (n =  %.1f)' % default_n: test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performace_DFS_p.svg')
@@ -301,6 +321,8 @@ if __name__ == "__main__":
 
     # 50% Probability of connect each node 
     test_FW = test_n(2,20,default_probability,"PATH-FW",300)
+    test_FW.to_csv(DATA_FOLDER/'test_FW_n.csv', index=False)
+
 
     #test_FW_worst= test_n(2,20,1,"PATH-FW",300)
 
@@ -310,7 +332,9 @@ if __name__ == "__main__":
     #----PATH-FW test p----
     
     # 50% Probability of connect each node 
-    test_FW = test_p(default_n,"PATH-FW", 300)
+    test_FW = test_p(default_n,"PATH-FW", 500)
+    test_FW.to_csv(DATA_FOLDER/'test_FW_p.csv', index=False)
+
 
     # Plot graph
     plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performace_FW_p.svg')
