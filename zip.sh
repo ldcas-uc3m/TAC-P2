@@ -4,7 +4,7 @@
 
 set -e  # exit on error
 
-OUTFILE="../OPT01_84_Arnaiz_Casais.zip"
+OUTFILE="../OPT02_84_Arnaiz_Casais.zip"
 REPORT_FILENAME="memoria.pdf"
 
 [ -e $OUTFILE ] && rm $OUTFILE  # remove if exists already

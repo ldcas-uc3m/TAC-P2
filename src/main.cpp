@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
         path_t f;
 
         if (FLAG_algorithm == "PATH-DFS") { 
-            path_t f = &RandomUndirectedGraph::path_dfs;
+            f = &RandomUndirectedGraph::path_dfs;
         }
         else if (FLAG_algorithm == "PATH-FW") {
             f = &RandomUndirectedGraph::path_fw;
