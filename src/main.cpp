@@ -103,7 +103,7 @@ void test_clique(int n, float p, int iter, int k, clique_t func, bool print_grap
 /* CLI */
 
 DEFINE_int(n, 5, "size of the graph");
-DEFINE_float(p, 1, "probability of an edge between two nodes");
+DEFINE_float(p, 0.5, "probability of an edge between two nodes");
 DEFINE_int(iterations, 1, "number of iterations to execute");
 DEFINE_string(algorithm, "CLIQUE", "algorithm to apply (PATH-DFS, PATH-FW, CLIQUE, SAT-CLIQUE)");
 DEFINE_bool(graph, true, "output the graph");
