@@ -139,3 +139,67 @@ bool Graph::path_fw(int u, int v) const {
 
     return distance[u][v] < infinity;
 }
+
+
+/* K_CLIQUE(k) */
+
+
+inline int Graph::degree(int i) const {
+    return std::count_if(edges[i].begin(), edges[i].end(), [](int i) { return i > 0; });
+}
+
+
+bool Graph::k_clique(int k) const {
+    std::vector<int> subgraph {};
+    return _k_clique(0, subgraph, k);
+}
+
+
+
+bool Graph::_k_clique(int i, std::vector<int> & subgraph, int k) const {
+    for (size_t j = i; j < size(); ++j) {
+        if (degree(i) >= k - 1) {
+            subgraph.push_back(j);  // add current node to clique subgraph
+
+            if (is_connected(j, subgraph)) {  // new node forms clique
+                if (static_cast<int>(subgraph.size()) < k) {  // continue searching
+                    _k_clique(j, subgraph, k);
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+
+bool Graph::is_connected(int i, std::vector<int> & list) const {
+    if (list.size() == 0) return true;
+
+    for (auto & j : list) {
+        if (edges[i][j] == 0) {
+            if (i == j) continue;
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
+bool Graph::is_clique(std::vector<int> & graph) const {
+    for (size_t i = 0; i < graph.size(); ++i) {
+        for (size_t j = i + 1; j < graph.size(); ++j) {
+            if (edges[i][j] == 0) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+

@@ -36,7 +36,7 @@ class Graph {
         /**
         * @brief returns the number of nodes
         */
-        size_t size() { return edges.size(); }
+        size_t size() const { return edges.size(); }
 
 
         /* overload << operator */
@@ -44,7 +44,6 @@ class Graph {
             out << "[";
             for (size_t i = 0; i < graph.edges.size(); ++i) {
                 // print connected nodes
-                // out << i << ": " << "[";
                 out << "[";
                 size_t j = 0;
                 for (auto & node : graph.edges[i]) {
@@ -80,10 +79,39 @@ class Graph {
         bool path_fw(int u, int v) const;
 
 
+        /* K-CLIQUE implementations */
+
+        /**
+         * @brief checks if there is a complete subgraph of size k
+        */
+        bool k_clique(int k) const;
+
+
     protected:  // can be accessed by children
         std::vector<std::vector<int>> edges;  // adjacency matrix (1 = edge, 0 = no edge)
 
         bool _path_dfs(int u, int v, std::set<int> & visited) const;
+
+
+        /* K-CLIQUE implementations */
+
+        bool _k_clique(int i, std::vector<int> & list, int k) const;
+
+        /**
+         * @brief checks if a subgraph is complete
+        */
+        bool is_clique(std::vector<int> & list) const;
+
+        /**
+         * @brief checks if a node i is connected to the rest of nodes in the list
+        */
+        bool is_connected(int i, std::vector<int> & list) const;
+
+        /**
+         * @brief computes the degree of a node
+        */
+        inline int degree(int i) const;
+
 };
 
 
@@ -93,7 +121,8 @@ class RandomUndirectedGraph : public Graph {
         RandomUndirectedGraph(
             int n,  // number of nodes
             float prob_edge  // probability of an edge in between two nodes
-        ) {  // nodes is already initialized by the constructor of the parent class
+            // edges is already initialized by the constructor of the parent class
+        ) {
             assert(n > 0);
 
             for (int i = 0; i < n; ++i) {
