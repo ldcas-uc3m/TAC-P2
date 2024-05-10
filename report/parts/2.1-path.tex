@@ -54,8 +54,10 @@ La complejidad temporal del algoritmo de Floyd-Warshall, viene dada por los tres
 
 \subsection*{Evaluación empírica}
 
-Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva acabo una batería de pruebas con diferentes valores.
+Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva acabo una batería de pruebas con diferentes valores tanto para una misma $n$ con diferentes $p$ como a la inversa, a fin de comprobar como afecta cada una al rendimiento.
 
 \plotperformance{FW}
 
-Se observa que el costo computacional definido por T(n) se corresponde con los resultados obtenidos ya que se observa en la gráfica que el comportamiento que sigue el algoritmo se aproxima a ser cúbico.
+Se observa que el costo computacional definido por T(n) se corresponde con los resultados obtenidos ya que se observa en la gráfica que el comportamiento que sigue el algoritmo se aproxima a ser cúbico. Se observa también que la variación de $p$, la probabilidad de que dos nodos se encuentren conectados, apenas  afecta a los resultados de $T(n)$.
+
+Por otro lado se observando que la variación del tiempo para computar una misma $n$ en función de $p$ es mínima y esta apenas tiene influencia ya que la variación es de pocas decenas de microsegundos

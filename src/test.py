@@ -113,7 +113,7 @@ def plot_dataframes(
         if x_column == 'n':
             # Set ticks on the x-axis for each unique point in the x data, spaced by intervals of 20
             ax.xaxis.set_major_locator(MultipleLocator(20))
-        if x_column == 'p':
+        elif x_column == 'p':
             # Set ticks on the x-axis for each unique point in the x data, spaced by intervals of 20
             ax.xaxis.set_major_locator(MultipleLocator(0.1))
         else:
@@ -131,7 +131,7 @@ def plot_dataframes(
 
     # Add labels
     ax.set_xlabel(x_column)
-    ax.set_ylabel(y_column + ' (ns)')
+    ax.set_ylabel(y_column + ' (ms)')
 
     ax.legend()
 
@@ -313,7 +313,7 @@ if __name__ == "__main__":
     print('Ploted DFS according to n')
 '''
     #----PATH-DFS test p----
-    
+    '''
     # 50% Probability of connect each node 
     test_DFS = test_p(default_n,"PATH-DFS", 500)
     test_DFS.to_csv(DATA_FOLDER/'test_DFS_p.csv', index=False)
@@ -323,23 +323,35 @@ if __name__ == "__main__":
 
     logger.info("Testing PATH-FW...")
 
-
+'''
     #----PATH-FW test n----
-
+    '''
     # 50% Probability of connect each node 
     test_FW = test_n(2,400,default_probability,"PATH-FW",300)
     test_FW.to_csv(DATA_FOLDER/'test_FW_n.csv', index=False)
 
-
-    #test_FW_worst= test_n(2,20,1,"PATH-FW",300)
-
     # Plot graph
     plot_dataframes({'PATH-FW (p = %.1f)' % default_probability: test_FW}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
+    
+    # 50% Probability of connect each node
+    test_DFS1 = test_n(2,120,0.5,"PATH-FW", 300)
+    test_DFS1.to_csv(DATA_FOLDER/'test_FW_n1.csv', index=False)
 
+    # 25% Probability of connect each node, worst case 
+    test_DFS2 = test_n(2,120,0.25 ,"PATH-FW",300)
+    test_DFS2.to_csv(DATA_FOLDER/'test_FW_n2.csv', index=False)
+
+    # 75% Probability of connect each node, worst case 
+    test_DFS3 = test_n(2,120,0.25 ,"PATH-FW",300)
+    test_DFS3.to_csv(DATA_FOLDER/'test_FW_n3.csv', index=False)
+    
+    # Plot graph
+    plot_dataframes({'PATH-FW (p = %.1f)' % 0.25: test_DFS2, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.75: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
+    '''
     #----PATH-FW test p----
     
     # 50% Probability of connect each node 
-    test_FW = test_p(default_n,"PATH-FW", 500)
+    test_FW = test_p(200,"PATH-FW", 1200)
     test_FW.to_csv(DATA_FOLDER/'test_FW_p.csv', index=False)
 
 
