@@ -11,6 +11,7 @@ from itertools import product
 import statistics
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MultipleLocator
 import pandas as pd
 import matplotlib.colors as mcolors
 
@@ -103,30 +104,32 @@ def plot_dataframes(
     :param save_file: File to save the image to. If `None`, shows the plot.
     """
 
-    # Crear el gráfico
     fig, ax = plt.subplots()
 
     for name, df in dfs.items():
-        # print(dfs.items())
         ax.plot(df[x_column], df[y_column], marker='o', label=name)
 
-
+        # Set x-axis ticks specifically for 'n' or based on the x_column data type
         if x_column == 'n':
-        # Añadir ticks en el eje x para cada punto único en los datos de x
-            x_ticks = df[x_column].dropna().astype(int).unique()  # Asegura la conversión a int
+            # Set ticks on the x-axis for each unique point in the x data, spaced by intervals of 20
+            ax.xaxis.set_major_locator(MultipleLocator(20))
+        if x_column == 'p':
+            # Set ticks on the x-axis for each unique point in the x data, spaced by intervals of 20
+            ax.xaxis.set_major_locator(MultipleLocator(0.1))
         else:
-            x_ticks = df[x_column].dropna().astype(float).unique()
-        ax.set_xticks(x_ticks)
+            # Set ticks for other x_columns
+            unique_x = df[x_column].dropna().unique()
+            ax.set_xticks(unique_x if len(unique_x) < 20 else np.linspace(min(unique_x), max(unique_x), 20))
 
-    # Determinar la paleta de colores dependiendo del número de series de datos
+    # Determine the color palette depending on the number of data series
     if len(dfs) <= len(mcolors.BASE_COLORS):
-        palette = mcolors.BASE_COLORS
+        palette = list(mcolors.BASE_COLORS.values())
     else:
-        palette = mcolors.XKCD_COLORS
+        palette = list(mcolors.XKCD_COLORS.values())
 
     ax.set_prop_cycle(color=palette)
 
-    # Agregar etiquetas
+    # Add labels
     ax.set_xlabel(x_column)
     ax.set_ylabel(y_column + ' (ns)')
 
@@ -135,10 +138,9 @@ def plot_dataframes(
     if save_file:
         fig.savefig(save_file)
     else:
-        fig.show()
+        plt.show()
 
     plt.close()
-
 
 
 def plot_functions(
@@ -268,7 +270,7 @@ def test_p (n, algorithm, n_tests):
         })
         results = pd.concat([results, new_row], ignore_index=True)
 
-        p+=0.1
+        p+=0.05
 
         sys.stdout.write("\033[K")  # clear line
 
@@ -292,19 +294,24 @@ if __name__ == "__main__":
 
     logger.info("Testing PATH-DFS...")
     #----PATH-DFS test n----
-    
+    '''
     # 50% Probability of connect each node
-    test_DFS = test_n(2,20,default_probability,"PATH-DFS", 300)
-    test_DFS.to_csv(DATA_FOLDER/'test_DFS_n.csv', index=False)
+    test_DFS1 = test_n(2,120,0.5,"PATH-DFS", 300)
+    test_DFS1.to_csv(DATA_FOLDER/'test_DFS_n1.csv', index=False)
 
-    # 100% Probability of connect each node, worst case 
-    test_DFS_worst = test_n(2,20,DFS_worst_probability ,"PATH-DFS",300)
-    test_DFS_worst.to_csv(DATA_FOLDER/'test_DFS_n_worst.csv', index=False)
+    # 25% Probability of connect each node, worst case 
+    test_DFS2 = test_n(2,120,0.25 ,"PATH-DFS",300)
+    test_DFS2.to_csv(DATA_FOLDER/'test_DFS_n2.csv', index=False)
+
+    # 75% Probability of connect each node, worst case 
+    test_DFS3 = test_n(2,120,0.25 ,"PATH-DFS",300)
+    test_DFS3.to_csv(DATA_FOLDER/'test_DFS_n3.csv', index=False)
 
     # Plot graph
-    plot_dataframes({'PATH-DFS (p = %.1f)' % default_probability: test_DFS, 'PATH-DFS-WORST-CASE (p = %.1f)' % DFS_worst_probability: test_DFS_worst}, 'n', 'duration', IMAGE_FOLDER/'performace_DFS_n.svg')
+    plot_dataframes({'PATH-DFS (p = %.1f)' % 0.25: test_DFS2, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.75: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
 
-
+    print('Ploted DFS according to n')
+'''
     #----PATH-DFS test p----
     
     # 50% Probability of connect each node 
@@ -312,7 +319,7 @@ if __name__ == "__main__":
     test_DFS.to_csv(DATA_FOLDER/'test_DFS_p.csv', index=False)
 
     # Plot graph
-    plot_dataframes({'PATH-DFS (n =  %.1f)' % default_n: test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performace_DFS_p.svg')
+    plot_dataframes({'PATH-DFS (n =  %.1f)' % default_n: test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performance_DFS_p.svg')
 
     logger.info("Testing PATH-FW...")
 
@@ -320,14 +327,14 @@ if __name__ == "__main__":
     #----PATH-FW test n----
 
     # 50% Probability of connect each node 
-    test_FW = test_n(2,20,default_probability,"PATH-FW",300)
+    test_FW = test_n(2,400,default_probability,"PATH-FW",300)
     test_FW.to_csv(DATA_FOLDER/'test_FW_n.csv', index=False)
 
 
     #test_FW_worst= test_n(2,20,1,"PATH-FW",300)
 
     # Plot graph
-    plot_dataframes({'PATH-FW (p = %.1f)' % default_probability: test_FW}, 'n', 'duration', IMAGE_FOLDER/'performace_FW_n.svg')
+    plot_dataframes({'PATH-FW (p = %.1f)' % default_probability: test_FW}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
 
     #----PATH-FW test p----
     
@@ -337,6 +344,6 @@ if __name__ == "__main__":
 
 
     # Plot graph
-    plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performace_FW_p.svg')
+    plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_FW_p.svg')
 
     # TODO: save data to CSV

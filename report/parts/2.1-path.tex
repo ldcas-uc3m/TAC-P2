@@ -12,13 +12,50 @@ el cual se da cuando el $u$ es el primer nodo, y el grafo está completamente co
 
 \subsection*{Evaluación empírica}
 
+Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación anaítica son correctas se lleva acabo una serie de tests, tomando la probabilidad de encontrar
+
+
+
 \plotperformance{DFS}
 
 
 
 \subsection{Floyd-Warshall}\label{subsec:fw}
 
+\subsubsection*{Evaluación analítica del algoritmo}
+
+Para analizar el coste computacional del algoritmo desarrollado, se puede dividir en tres secciones claramente diferenciadas para luego sumar sus costes y obtener un total, siendo dichas secciones: 
+\begin{itemize}
+    \item \textbf{Inicialización del Algoritmo}: Inicializar el algoritmo leyendo los parámetros e inicializar los dos nodos a computar el coste es de 7, ya que se trata únicamente de inicialización de variables y una comparación 'IF'.
+    
+    \item \textbf{Inicialización de matriz de distancias}: Esta sección del algoritmo cuenta con 2 bucles anidados que calculan la matriz de unos y ceros que indican que nodos se encuentran directamente conectados.
+    \begin{itemize}
+        \item \textbf{Bucle externo (u)}: Itera a través de cada nodo que actúa como un nodo intermedio en los caminos posibles, con un coste de $2n$ puesto que se modifica el valor de dos variables.
+        \item \textbf{Bucle externo (v)}: Itera sobre todos los nodos posibles como nodo inicial, con un coste de n. En su interior el bucle consta de dos modificaciones de variables, y varias comparaciones 'IF' teniendo en el peor caso la comparación un coste de 3, por lo que el coste total del bucle sería de $5n$.
+    \end{itemize}
+    El costo de esta sección del algoritmo sería de un total de $10n^2$
+
+    \item \textbf{Cálculo de la distancia entre nodos}: Itera sobre todos los nodos posibles como nodo final.
+    \begin{itemize}
+        \item \textbf{Bucle externo (k)}: Itera a través de cada nodo que actúa como un nodo intermedio en los caminos posibles, con un coste de n.
+        \item \textbf{Bucle medio (i)}: Itera sobre todos los nodos posibles como nodo inicial, con un coste de $n$.
+        \item \textbf{Bucle interno (j)}: Itera sobre todos los nodos posibles como nodo final, con un coste de n. Cuenta con una comparación 'IF' de coste 2 por lo que el coste total de este bucles sería de $2n$.
+    \end{itemize}
+    El costo de esta sección sería de un total de $2n^3$
+    
+\end{itemize}
+
+Si se toma el costo de cada una de las tres secciones que componen el algoritmo, el costo total del algoritmo sería:
+\begin{equation}
+    T_{\mathrm{FW}}(n) = 2n^3 + 10n^2 + 7
+\end{equation}
+
+La complejidad temporal del algoritmo de Floyd-Warshall, viene dada por los tres bucles anidados donde se calcula la distancia entre nodos  siendo esta de O(n³).
 
 \subsection*{Evaluación empírica}
 
+Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva acabo una batería de pruebas con diferentes valores.
+
 \plotperformance{FW}
+
+Se observa que el costo computacional definido por T(n) se corresponde con los resultados obtenidos ya que se observa en la gráfica que el comportamiento que sigue el algoritmo se aproxima a ser cúbico.
