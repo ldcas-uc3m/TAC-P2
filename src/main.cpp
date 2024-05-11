@@ -156,10 +156,11 @@ int main(int argc, char* argv[]) {
     REGISTER_FLAG(argc, argv, help);
 
     if (FLAG_help) {
-        std::cout << "Usage:\n  " << argv[0] << " [options]";
+        std::cout << "Usage:\n  " << argv[0] << " [options] [SAT-PROBLEM]";
         std::cout << "\n\nOPTIONS";
         flaghelp();
-        std::cout << "\nIf using the K-CLIQUE algorithm, add the problem string as the last parameter.\n";
+        std::cout << "\nARGUMENTS\n";
+        std::cout << "  SAT-PROBLEM\tProblem string for the K-SAT algorithm, using parenthesis, * (AND), + (OR) & - (NOT).\n\t\tE.g.: ((c+b+-c)*(a+b+c)*(-a+b+c))\n";
 
         return 0;
     }
