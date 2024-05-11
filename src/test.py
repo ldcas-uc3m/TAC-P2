@@ -42,45 +42,150 @@ else:
 # TEST FUNCTIONS
 # ==============
 
-def test(n: int, p: Annotated[float, "0 < p < 1"], algorithm: Literal["DFS", "PATH-DFS", "PATH-FW", "CLIQUE", "SAT-CLIQUE"], iterations: int) -> pd.DataFrame:
+def test(n: int, p: float, algorithm: str, iterations: int) -> pd.DataFrame:
     """
-    Creates random graphs of size `n` with probability of edges `p`, and applies the selected algorithm for the specified number of `iterations`.
+    Creates random graphs or SAT problems of size `n` with probability of edges `p`, and applies the selected algorithm for the specified number of `iterations`.
 
-    :param n: Size of the graph.
+    :param n: Size of the graph or number of variables/clauses in SAT problem.
     :param p: Probability of an edge between two nodes, between `0` and `1`.
     :param algorithm: Algorithm to apply.
     :param iterations: Number of tests.
+    :param sat_problem: The SAT problem string (only used if algorithm is 'SAT-CLIQUE').
 
     :return: DataFrame with columns {n, result, duration}
     """
-
-    results = pd.DataFrame(
-        columns=[
-            'n',
-            'result',
-            'duration'
-        ]
-    )
-
-    tests: dict = json.loads(subprocess.check_output([
+    args = [
         SIMULATOR_EXEC,
         f"--n={n}",
         f"--p={p}",
         f"--algorithm={algorithm}",
         f"--iterations={iterations}",
         "--nograph"
-    ]))['tests']
+    ]
+
+    results = pd.DataFrame(columns=['n', 'result', 'duration'])
+    output = subprocess.check_output(args)
+    tests = json.loads(output)['tests']
 
     for t in tests:
-        # append to df
         results.loc[len(results)] = {
             'n': n,
             'result': t['result'],
             'duration': t['duration']
         }
 
+    return results
+
+
+def test_n (n_min, n_max, probability, algorithm, n_tests):
+    """
+    Function to calculate the average duration depending on the n size (Number of vertices of the graph)
+    """
+
+    results = pd.DataFrame(columns=['n', 'duration'])
+    
+    for n in range(n_min, n_max + 1):
+        print(f"n: {n}, p: {probability}, algorithm: {algorithm}", end='\r')
+        run = test(n, probability, algorithm, n_tests)
+        average_duration = run['duration'].mean()
+        results = results._append({'n': n, 'duration': average_duration}, ignore_index=True)
 
     return results
+
+
+def test_p (n, algorithm, n_tests):
+    """
+    Function to calculate the average duration depending on the p (probability of edge between two nodes)
+    """
+
+    results = pd.DataFrame(
+        columns=[
+            'n',
+            'p',
+            'duration'
+        ]
+    )
+
+    p = 0.1
+    while p <= 1:
+        print(f"n: {n}, p: {p}", end='\r')
+        durations = []
+
+        ''' 
+        # For each graph size, it is executed 10 times and then calculate the average execution time
+        for index in range(n_tests):
+            run = test(n, p, algorithm, 1)
+            durations.append(run['duration'][0])
+        
+        avg_duration = statistics.mean(durations)
+
+        #In the dataframe is saved the average time needed for each graph size
+        new_values = pd.DataFrame({'n': [n], 'p': [p], 'duration': [avg_duration]})
+        p+=0.1
+        results = pd.concat([results, new_values], ignore_index=True)
+        
+        '''
+        #Run a battery of tests with the n given and the n_tests number of times given
+        run = test(n, p, algorithm, n_tests)
+        
+        #Take the average duration for each n size
+        average_durations = run['duration'].mean()
+
+        #Save the results into a dataframe
+        new_row = pd.DataFrame({
+            'n': [n],
+            'p': [p],
+            'duration': [average_durations]
+        })
+        results = pd.concat([results, new_row], ignore_index=True)
+
+        p+=0.05
+
+        sys.stdout.write("\033[K")  # clear line
+
+    #print(results)
+    return results
+
+
+
+def test_sat() -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Performs a batch of 3-SAT problems.
+    """
+    results = pd.DataFrame(columns=['iteration', 'result', 'time'])
+    results_t = pd.DataFrame(columns=['iteration', 'result', 'time'])
+
+    programs = [
+        "((c+b+-c)*(a+b+c)*(-a+b+c))",
+        "((c+b+-c)*(a+b+c)*(-a+b+-c))",
+        "((c+b+-c)*(a+-b+c)*(-a+b+-c))",
+        "((c+b+-c)*(b+b+c)*(a+b+-c))"
+    ]
+
+    i: int = 0
+    for program in programs:
+        test: dict = json.loads(subprocess.check_output([
+            SIMULATOR_EXEC,
+            "--algorithm=SAT-CLIQUE",
+            "--nograph",
+            program
+        ]))
+
+        results.loc[len(results)] = {
+            'iteration': i,
+            'result': test['result'],
+            'time': test['duration'],
+        }
+
+        results_t.loc[len(results)] = {
+            'iteration': i,
+            'result': test['result'],
+            'time': test['duration_transf']
+        }
+
+        i += 1
+
+    return results, results_t
 
 
 
@@ -188,94 +293,7 @@ def plot_functions(
 
     plt.close()
 
-def test_n (n_min, n_max, probability, algorithm, n_tests):
-    """
-    Function to calculate the average duration depending on the n size (Nomber of vertices of the graph)
-    """
 
-    # Datframe to save the result
-    results = pd.DataFrame(
-        columns=[
-            'n',
-            'duration'
-        ]
-    )
-
-    
-    for n in range(n_min, n_max+1):
-
-        print(f"n: {n}, p: {probability}", end='\r')
-
-        #Run a battery of tests with the n given and the n_tests number of times given
-        run = test(n, probability, algorithm, n_tests)
-        
-        #Take the average duration for each n size
-        average_durations = run['duration'].mean()
-
-        #Save the results into a dataframe
-        new_row = pd.DataFrame({
-            'n': [n],
-            'duration': [average_durations]
-        })
-        results = pd.concat([results, new_row], ignore_index=True)
-
-        sys.stdout.write("\033[K")  # clear line
-
-    return results
-        
-
-def test_p (n, algorithm, n_tests):
-    """
-    Function to calculate the average duration depending on the p (probability of edge between two nodes)
-    """
-
-    results = pd.DataFrame(
-        columns=[
-            'n',
-            'p',
-            'duration'
-        ]
-    )
-
-    p = 0.1
-    while p <= 1:
-        print(f"n: {n}, p: {p}", end='\r')
-        durations = []
-
-        ''' 
-        # For each graph size, it is executed 10 times and then calculate the average execution time
-        for index in range(n_tests):
-            run = test(n, p, algorithm, 1)
-            durations.append(run['duration'][0])
-        
-        avg_duration = statistics.mean(durations)
-
-        #In the dataframe is saved the average time needed for each graph size
-        new_values = pd.DataFrame({'n': [n], 'p': [p], 'duration': [avg_duration]})
-        p+=0.1
-        results = pd.concat([results, new_values], ignore_index=True)
-        
-        '''
-        #Run a battery of tests with the n given and the n_tests number of times given
-        run = test(n, p, algorithm, n_tests)
-        
-        #Take the average duration for each n size
-        average_durations = run['duration'].mean()
-
-        #Save the results into a dataframe
-        new_row = pd.DataFrame({
-            'n': [n],
-            'p': [p],
-            'duration': [average_durations]
-        })
-        results = pd.concat([results, new_row], ignore_index=True)
-
-        p+=0.05
-
-        sys.stdout.write("\033[K")  # clear line
-
-    #print(results)
-    return results
 
 
 
@@ -296,7 +314,7 @@ if __name__ == "__main__":
 
 
     #----PATH-DFS test n----
-    '''
+    
     # 25% Probability of connect each node, worst case 
     test_DFS1 = test_n(2,120,0.25 ,"PATH-DFS",300)
     test_DFS1.to_csv(DATA_FOLDER/'test_DFS_n1.csv', index=False)
@@ -313,7 +331,7 @@ if __name__ == "__main__":
     plot_dataframes({'PATH-DFS (p = %.1f)' % 0.25: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS2, 'PATH-DFS (p = %.1f)' % 1.0: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
 
     print('Ploted DFS according to n')
-    '''
+    
 
     #----PATH-DFS test p----
     
@@ -325,19 +343,19 @@ if __name__ == "__main__":
     plot_dataframes({'PATH-DFS (n =  %.1f)' % 200: test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performance_DFS_p.svg')
 
     logger.info("Testing PATH-FW...")
-
+    
     
 
     #----PATH-FW test n----
-    '''
+    
     # 50% Probability of connect each node 
     test_FW = test_n(2,400,default_probability,"PATH-FW",300)
     test_FW.to_csv(DATA_FOLDER/'test_FW_n.csv', index=False)
 
     # Plot graph
     plot_dataframes({'PATH-FW (p = %.1f)' % default_probability: test_FW}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
-    '''
-    '''
+    
+    
     # 25% Probability of connect each node, worst case 
     test_DFS1 = test_n(2,120,0.25 ,"PATH-FW",300)
     test_DFS1.to_csv(DATA_FOLDER/'test_FW_n1.csv', index=False)
@@ -352,10 +370,10 @@ if __name__ == "__main__":
     
     # Plot graph
     plot_dataframes({'PATH-FW (p = %.1f)' % 0.25: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS2, 'PATH-DFS (p = %.1f)' % 1.0: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
-    '''
+    
 
     #----PATH-FW test p----
-    '''
+    
     # 50% Probability of connect each node 
     test_FW = test_p(200,"PATH-FW", 1200)
     test_FW.to_csv(DATA_FOLDER/'test_FW_p.csv', index=False)
@@ -364,12 +382,12 @@ if __name__ == "__main__":
     plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_FW_p.svg')
     logger.info("Testing PATH-CLIQUE...")
 
-    '''
+    
 
     #----CLIQUE test n----
 
 
-    '''
+    
     # 25% Probability of connect each node, worst case 
     test_DFS1 = test_n(2,120,0.25 ,"CLIQUE",300)
     test_DFS1.to_csv(DATA_FOLDER/'test_CLIQUE_n1.csv', index=False)
@@ -389,13 +407,25 @@ if __name__ == "__main__":
     #----CLIQUE test p----
     
     # 50% Probability of connect each node 
+    logger.info("Testing PATH-CLIQUE...")
     test_FW = test_p(200,"CLIQUE", 1200)
     test_FW.to_csv(DATA_FOLDER/'test_CLIQUE_p.csv', index=False)
 
     # Plot graph
     plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_CLIQUE_p.svg')
-    logger.info("Testing PATH-CLIQUE...")
-    '''
+    
 
-    
-    
+    #----SAT test n----
+    logger.info("Testing SAT-CLIQUE...")
+    test_SAT, test_SAT_t = test_sat()
+    plot_dataframes(
+        {"total duration": test_SAT, "transformation": test_SAT_t},
+        x_column="iteration",
+        y_column="time",
+        save_file=IMAGE_FOLDER/'performance_SAT.svg',
+        custom_ticks=False
+    )
+
+
+
+
