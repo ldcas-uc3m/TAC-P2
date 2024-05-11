@@ -2,7 +2,7 @@
 
 
 \subsection{Depth-First Search}\label{subsec:dfs}
-El algoritmo DFS\supercite{hopcroft1983data} es un algoritmo para recorrer un grafo `en profundidad', y puede ser aplicado a nuestro problema $\mathrm{PATH}(u,v)$ recorriendo el grafo desde el nodo origen ($u$) y comprobando a cada paso si hemos llegado al nodo destino ($v$). En caso de que no lleguemos nunca, no hay camino.
+El algoritmo DFS\supercite[Figure 6.24]{hopcroft1983data} es un algoritmo para recorrer un grafo `en profundidad', y puede ser aplicado a nuestro problema $\mathrm{PATH}(u,v)$ recorriendo el grafo desde el nodo origen ($u$) y comprobando a cada paso si hemos llegado al nodo destino ($v$). En caso de que no lleguemos nunca, no hay camino.
 
 \subsubsection*{Evaluación analítica del algoritmo}
 Para analizar correctamente el algoritmo y sacar una cota asintótica superior, debemos de analizar el peor caso, % TODO: citation needed
@@ -43,7 +43,7 @@ Esto se observa también claramente en la segunda gráfica donde para una misma 
 
 \subsection{Floyd-Warshall}\label{subsec:fw}
 
-El algoritmo Floyd-Warshall permite encontrar el camino más corto entro dos nodos siguiendo un proceso iterativo a través del cual se calcula la distancia entre un nodo a los demás siendo el valor de 0 para si mismo, infinito si no se encuentran conectados y de 1 en este caso si están conectado. 
+El algoritmo Floyd-Warshall\supercite{FloydRobertW.1962A9Sp} permite encontrar el camino más corto entro dos nodos siguiendo un proceso iterativo a través del cual se calcula la distancia entre un nodo a los demás siendo el valor de 0 para si mismo, infinito si no se encuentran conectados y de 1 en este caso si están conectado. 
 
 \subsubsection*{Evaluación analítica del algoritmo}
 
