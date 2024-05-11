@@ -94,39 +94,31 @@ void test_clique(int n, float p, int iter, int k, clique_t func, bool print_grap
 /**
 * @brief solves a K-SAT problem by transforming it to a k-clique problem
 */
-void test_sat(int n, float p, int iter, std::string problem, bool print_graph) {
+void test_sat(int n, float p, std::string problem, bool print_graph) {
     std::cout << "{";
     std::cout << "\"n\":" << n << ",";
     std::cout << "\"p\":" << p << ",";
-    std::cout << "\"problem\":" << problem << ",";
+    std::cout << "\"problem\":\"" << problem << "\",";
 
-    std::cout << "\"tests\":[";
+    // transform K-SAT into K-CLIQUE
+    auto tic = std::chrono::high_resolution_clock::now();
+    auto [graph, k] = sat_to_clique(problem);
+    auto toc_t = std::chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < iter; ++i) {
-        std::cout << "{";
+    // solve k-clique
+    bool result = graph.k_clique(k);
+    auto toc = std::chrono::high_resolution_clock::now();
 
-        // transform K-SAT into K-CLIQUE
-        auto tic = std::chrono::high_resolution_clock::now();
-        auto [graph, k] = sat_to_clique(problem);
-        auto toc_t = std::chrono::high_resolution_clock::now();
+    if (print_graph) std::cout << "\"graph\":" << graph << ",";
 
-        // solve k-clique
-        bool result = graph.k_clique(k);
-        auto toc = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(toc-tic).count();
+    auto duration_transf = std::chrono::duration_cast<std::chrono::nanoseconds>(toc_t-tic).count();
 
-        if (print_graph) std::cout << "\"graph\":" << graph << ",";
+    std::cout << "\"result\":" << (result ? "true" : "false") << ",";
+    std::cout << "\"duration\":" << duration << ",";
+    std::cout << "\"duration_transf\":" << duration_transf;
 
-        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(toc-tic).count();
-        auto duration_transf = std::chrono::duration_cast<std::chrono::nanoseconds>(toc_t-tic).count();
-
-        std::cout << "\"result\":" << (result ? "true" : "false") << ",";
-        std::cout << "\"duration\":" << duration << ",";
-        std::cout << "\"duration_transf\":" << duration_transf << "}";
-
-        if (i < iter - 1) std::cout << ",";
-    }
-
-    std::cout << "]}";
+    std::cout << "}";
 }
 
 
@@ -200,7 +192,7 @@ int main(int argc, char* argv[]) {
     /* SAT-CLIQUE */
     else if (FLAG_algorithm == "SAT-CLIQUE") {
         // "((c+b+-c)*(a+b+c)*(-a+b+c))"
-        test_sat(FLAG_n, FLAG_p, FLAG_iterations, argv[argc - 1], FLAG_graph);
+        test_sat(FLAG_n, FLAG_p, argv[argc - 1], FLAG_graph);
     }
     else {
         std::cerr << "Unknown algorithm '" << FLAG_algorithm << "'\n";
