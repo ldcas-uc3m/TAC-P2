@@ -310,23 +310,23 @@ if __name__ == "__main__":
     test_DFS3.to_csv(DATA_FOLDER/'test_DFS_n3.csv', index=False)
 
     # Plot graph
-    plot_dataframes({'PATH-DFS (p = %.1f)' % 0.25: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS2, 'PATH-DFS (p = %.1f)' % 1: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
+    plot_dataframes({'PATH-DFS (p = %.1f)' % 0.25: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS2, 'PATH-DFS (p = %.1f)' % 1.0: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
 
     print('Ploted DFS according to n')
     '''
 
     #----PATH-DFS test p----
-    '''
+    
     # 50% Probability of connect each node 
-    test_DFS = test_p(default_n,"PATH-DFS", 500)
+    test_DFS = test_p(200,"PATH-DFS", 1200)
     test_DFS.to_csv(DATA_FOLDER/'test_DFS_p.csv', index=False)
 
     # Plot graph
-    plot_dataframes({'PATH-DFS (n =  %.1f)' % default_n: test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performance_DFS_p.svg')
+    plot_dataframes({'PATH-DFS (n =  %.1f)' % 200: test_DFS}, 'p', 'duration', IMAGE_FOLDER/'performance_DFS_p.svg')
 
     logger.info("Testing PATH-FW...")
 
-    '''
+    
 
     #----PATH-FW test n----
     '''

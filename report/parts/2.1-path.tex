@@ -12,11 +12,16 @@ el cual se da cuando el $u$ es el primer nodo, y el grafo está completamente co
 
 \subsection*{Evaluación empírica}
 
-Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación anaítica son correctas se lleva acabo una serie de tests, tomando la probabilidad de encontrar
-
-
+Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva acabo una batería de pruebas con diferentes valores tanto para una misma $n$ con diferentes $p$ como a la inversa, a fin de comprobar como afecta cada una al rendimiento.
 
 \plotperformance{DFS}
+
+Se observa claramente en la gráfica que para grafos con densidades extremas, ya sean muy conectados o totalmente conectados, el tiempo de computación es notablemente menor que para grafos con densidades medias.
+
+Esto se debe a que en los grafos con densidades bajas, el algoritmo encuentra rápido aquellos caminos por lo que no es posible continuar con la búsqueda ya que los nodos tiene pocas conexiones . En el caso de grafos de alta densidad o totalmente conectados también el algoritmo encontrará rápido un camino entre nodos ya que habrá pocos o nulos caminos sin salida.
+
+Por otro lado en grafos de densidad media, el algoritmo tendrá que probar con múltiples caminos que pueden ser más largos pese a no conducir al objetivo para luego tener que probar nuevos caminos.
+Esto se observa también claramente en la segunda gráfica donde para una misma $n$ a medida que $p$ aumenta el tiempo de computación aumenta hasta llegar a un pico entre $p=0.5$ y $p=0.6$ donde se crearán grafos de densidad media, para luego descender a mediad que $p$ aumenta hasta llegar al grafo totalmente conectado.
 
 
 
