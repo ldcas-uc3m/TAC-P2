@@ -14,6 +14,27 @@
 }
 
 
+% \rasterfigure[width]{filename}{caption}
+\newcommand{\rasterfigure}[3][0.7] {
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=#1\textwidth]{#2}
+    \caption{#3}
+    \label{fig:#2}
+  \end{figure}
+}
+
+% \svgfigure[width]{filename}{caption}
+\newcommand{\svgfigure}[3][0.7] {
+  \begin{figure}[h]
+    \centering
+    \includesvg[width=#1\textwidth]{#2}
+    \caption{#3}
+    \label{fig:#2}
+  \end{figure}
+}
+
+
 % \plotperformance{algorithm}
 \newcommand{\plotperformance}[1] {
   \begin{figure}[H]

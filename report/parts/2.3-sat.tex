@@ -23,4 +23,10 @@ Por lo tanto, el coste total de la transformación sería:
 
 
 \subsection*{Evaluación empírica}
-Dado que solo se pidió analizar el caso 3-SAT, para todas las pruebas usaremos $k=3$.
+Dado que solo se pidió analizar el caso 3-SAT, para todas las pruebas usaremos $k=3$. Debido a eso, se decidió hacer pruebas con distintos problemas, o iteraciones, para observar la diferencia de coste entre la resolución del problema y la transformación de un problema en otro.
+
+En la Figura \ref{fig:performance_SAT} se muestra el tiempo de ejecución de la transformación de 3-SAT a 3-CLIQUE y el tiempo total del problema, incluyendo la resolución del 3-CLIQUE.
+
+\svgfigure{performance_SAT}{Tiempo de ejecución del algoritmo SAT}
+
+Se observa que el coste de la transformación se lleva la mayor parte del coste de resolución de los problemas, principalmente porque se trata de trabajar con \textit{strings}, lo cual es extremadamente lento comparado con operar otro tipo de estructuras de datos. La resolución del 3-CLIQUE, al ser de un tamaño tan pequeño, es extremadamente rápida.
