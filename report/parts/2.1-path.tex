@@ -50,7 +50,10 @@ Si se toma el costo de cada una de las tres secciones que componen el algoritmo,
     T_{\mathrm{FW}}(n) = 2n^3 + 10n^2 + 7
 \end{equation}
 
-La complejidad temporal del algoritmo de Floyd-Warshall, viene dada por los tres bucles anidados donde se calcula la distancia entre nodos  siendo esta de O(n³).
+La complejidad temporal del algoritmo de Floyd-Warshall, viene dada por los tres bucles anidados donde se calcula la distancia entre nodos  siendo esta:
+\begin{equation}
+    O_{\mathrm{FW}}(n^3) 
+\end{equation}
 
 \subsection*{Evaluación empírica}
 
@@ -59,5 +62,7 @@ Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusio
 \plotperformance{FW}
 
 Se observa que el costo computacional definido por T(n) se corresponde con los resultados obtenidos ya que se observa en la gráfica que el comportamiento que sigue el algoritmo se aproxima a ser cúbico. Se observa también que la variación de $p$, la probabilidad de que dos nodos se encuentren conectados, apenas  afecta a los resultados de $T(n)$.
+
+Esto es coherente con la evaluación analítica realizada ya que para Floyd-Warshall la complejidad temporal viene determinada por el numero de nodos y no tanto por la densidad del propio grafo, ya que los bucles se ejecutan para cada nodo y no únicamente ara los nodos conectados, lo que muestra que es un algoritmo adecuado para encontrar caminos entre nodos independientemente de la densidad del grafo dado.
 
 Por otro lado se observando que la variación del tiempo para computar una misma $n$ en función de $p$ es mínima y esta apenas tiene influencia ya que la variación es de pocas decenas de microsegundos

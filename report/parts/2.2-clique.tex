@@ -21,13 +21,6 @@ El coste en términos de complejidad temporal vendría marcado por el uso de dos
 \end{equation}
 
 
-\subsection*{Evaluación empírica}
-
-Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva acabo una batería de pruebas con diferentes valores tanto para una misma $n$ con diferentes $p$ como a la inversa, a fin de comprobar como afecta cada una al rendimiento.
-
-\plotperformance{Clique}
-
-
 
 \subsection{K-Clique}\label{subsec:k-clique}
 
@@ -65,4 +58,10 @@ El coste en términos de complejidad temporal vendría marcado por el uso de uan
 
 Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva acabo una batería de pruebas con diferentes valores tanto para una misma $n$ con diferentes $p$ como a la inversa, a fin de comprobar como afecta cada una al rendimiento.
 
-\plotperformance{K-Clique}
+\plotperformance{CLIQUE}
+
+Se observa claramente como el costo de $T(n)$ es mucho menor para grafos con densidades extremas. Con $p=0.2$ se trata de grafos muy poco conectados donde el algoritmo rápidamente identificará que no es posible encontrar cliques de gran tamaño  dentro del grafo. Para $p=1.0$ se trata de un grafo totalmente conectado por lo que el algoritmo rápidamente encuentra que el clique máximo será el propio grafo.
+
+Por otro lado el tener una $p=0.5$ indica que el grafo tendrá una densidad media por lo que el algoritmo tendrá que probar un mayor número de posibles combinaciones para encontrar el mayor clique.
+
+El gráfico en función de $p$ muestra claramente los punto expuestos donde el tiempo máximo de computo se obtiene para los valores donde el grafo generado tiene una densidad media que exigirá realizar más comprobaciones siendo los valores que exigirán un mayor tiempo aquellos comprendidos entre $p=0.5$ y $p=0,7$, mientras que se observa claramente que para los puntos extremos el tiempo disminuye.

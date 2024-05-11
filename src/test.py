@@ -293,25 +293,28 @@ if __name__ == "__main__":
     #print('Duration: ', result['duration'][0])
 
     logger.info("Testing PATH-DFS...")
+
+
     #----PATH-DFS test n----
     '''
-    # 50% Probability of connect each node
-    test_DFS1 = test_n(2,120,0.5,"PATH-DFS", 300)
+    # 25% Probability of connect each node, worst case 
+    test_DFS1 = test_n(2,120,0.25 ,"PATH-DFS",300)
     test_DFS1.to_csv(DATA_FOLDER/'test_DFS_n1.csv', index=False)
 
-    # 25% Probability of connect each node, worst case 
-    test_DFS2 = test_n(2,120,0.25 ,"PATH-DFS",300)
+    # 50% Probability of connect each node
+    test_DFS2 = test_n(2,120,0.5,"PATH-DFS", 300)
     test_DFS2.to_csv(DATA_FOLDER/'test_DFS_n2.csv', index=False)
 
-    # 75% Probability of connect each node, worst case 
-    test_DFS3 = test_n(2,120,0.25 ,"PATH-DFS",300)
+    # 100% Probability of connect each node, worst case 
+    test_DFS3 = test_n(2,120,1.0,"PATH-DFS",300)
     test_DFS3.to_csv(DATA_FOLDER/'test_DFS_n3.csv', index=False)
 
     # Plot graph
-    plot_dataframes({'PATH-DFS (p = %.1f)' % 0.25: test_DFS2, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.75: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
+    plot_dataframes({'PATH-DFS (p = %.1f)' % 0.25: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS2, 'PATH-DFS (p = %.1f)' % 1: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_DFS_n.svg')
 
     print('Ploted DFS according to n')
-'''
+    '''
+
     #----PATH-DFS test p----
     '''
     # 50% Probability of connect each node 
@@ -323,7 +326,8 @@ if __name__ == "__main__":
 
     logger.info("Testing PATH-FW...")
 
-'''
+    '''
+
     #----PATH-FW test n----
     '''
     # 50% Probability of connect each node 
@@ -332,30 +336,64 @@ if __name__ == "__main__":
 
     # Plot graph
     plot_dataframes({'PATH-FW (p = %.1f)' % default_probability: test_FW}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
-    
-    # 50% Probability of connect each node
-    test_DFS1 = test_n(2,120,0.5,"PATH-FW", 300)
+    '''
+    '''
+    # 25% Probability of connect each node, worst case 
+    test_DFS1 = test_n(2,120,0.25 ,"PATH-FW",300)
     test_DFS1.to_csv(DATA_FOLDER/'test_FW_n1.csv', index=False)
 
-    # 25% Probability of connect each node, worst case 
-    test_DFS2 = test_n(2,120,0.25 ,"PATH-FW",300)
+    # 50% Probability of connect each node
+    test_DFS2 = test_n(2,120,0.5,"PATH-FW", 300)
     test_DFS2.to_csv(DATA_FOLDER/'test_FW_n2.csv', index=False)
 
-    # 75% Probability of connect each node, worst case 
-    test_DFS3 = test_n(2,120,0.25 ,"PATH-FW",300)
+    # 100% Probability of connect each node, worst case 
+    test_DFS3 = test_n(2,120,1.0 ,"PATH-FW",300)
     test_DFS3.to_csv(DATA_FOLDER/'test_FW_n3.csv', index=False)
     
     # Plot graph
-    plot_dataframes({'PATH-FW (p = %.1f)' % 0.25: test_DFS2, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.75: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
+    plot_dataframes({'PATH-FW (p = %.1f)' % 0.25: test_DFS1, 'PATH-DFS (p = %.1f)' % 0.5: test_DFS2, 'PATH-DFS (p = %.1f)' % 1.0: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
     '''
+
     #----PATH-FW test p----
-    
+    '''
     # 50% Probability of connect each node 
     test_FW = test_p(200,"PATH-FW", 1200)
     test_FW.to_csv(DATA_FOLDER/'test_FW_p.csv', index=False)
 
-
     # Plot graph
     plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_FW_p.svg')
+    logger.info("Testing PATH-CLIQUE...")
 
-    # TODO: save data to CSV
+    '''
+
+    #----CLIQUE test n----
+
+
+    
+    # 25% Probability of connect each node, worst case 
+    test_DFS1 = test_n(2,120,0.25 ,"CLIQUE",300)
+    test_DFS1.to_csv(DATA_FOLDER/'test_CLIQUE_n1.csv', index=False)
+
+    # 50% Probability of connect each node
+    test_DFS2 = test_n(2,120,0.5,"CLIQUE",300)
+    test_DFS2.to_csv(DATA_FOLDER/'test_CLIQUE_2.csv', index=False)
+
+    # 100% Probability of connect each node, worst case 
+    test_DFS3 = test_n(2,120,1.0 ,"CLIQUE",300)
+    test_DFS3.to_csv(DATA_FOLDER/'test_CLIQUE_n3.csv', index=False)
+    
+    # Plot graph
+    plot_dataframes({'CLIQUE (p = %.1f)' % 0.25: test_DFS1, 'CLIQUE (p = %.1f)' % 0.5: test_DFS2, 'CLIQUE (p = %.1f)' % 1.0: test_DFS3}, 'n', 'duration', IMAGE_FOLDER/'performance_CLIQUE_n.svg')
+    
+
+    #----CLIQUE test p----
+    
+    # 50% Probability of connect each node 
+    test_FW = test_p(200,"CLIQUE", 1200)
+    test_FW.to_csv(DATA_FOLDER/'test_CLIQUE_p.csv', index=False)
+
+    # Plot graph
+    plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_CLIQUE_p.svg')
+    logger.info("Testing PATH-CLIQUE...")
+
+    
