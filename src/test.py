@@ -369,7 +369,7 @@ if __name__ == "__main__":
     #----CLIQUE test n----
 
 
-    
+    '''
     # 25% Probability of connect each node, worst case 
     test_DFS1 = test_n(2,120,0.25 ,"CLIQUE",300)
     test_DFS1.to_csv(DATA_FOLDER/'test_CLIQUE_n1.csv', index=False)
@@ -395,5 +395,7 @@ if __name__ == "__main__":
     # Plot graph
     plot_dataframes({'PATH-FW (n =  %.1f)' % default_n: test_FW}, 'p', 'duration', IMAGE_FOLDER/'performance_CLIQUE_p.svg')
     logger.info("Testing PATH-CLIQUE...")
+    '''
 
+    
     
