@@ -8,7 +8,23 @@ El algoritmo DFS\supercite{hopcroft1983data} es un algoritmo para recorrer un gr
 Para analizar correctamente el algoritmo y sacar una cota asintótica superior, debemos de analizar el peor caso, % TODO: citation needed
 el cual se da cuando el $u$ es el primer nodo, y el grafo está completamente conectado, excepto el nodo $v$, el cual está exclusivamente conectado al último nodo.
 
+Para realizar la evaluación  analítica del algoritmo, se divide este en dos secciones a fin de determinar el costo de cada una, ya que se trata de funciones.
 
+\begin{itemize}
+    \item \textbf{Inicialización del Algoritmo}: Esta función (\texttt{path\_dfs}) cuenta con la inicialización de las variables correspondientes a cada uno de los nodos argumento, así como la inicialización de la variable de nodos resultados y la llamada a la función que calculará la distancia DFS, por ello su coste es de 4.
+
+    \item \textbf{Algoritmo DFS}: Esta función (\texttt{\_path\_dfs}) cuenta con una comparación \texttt{IF} y con una inicialización de variable cuyo coste total es de 3. En su interior se encuentra un bucle con dos comparaciones \texttt{IF} en su interior que suman coste 4, y una llamada recursiva al propio bucle, por ello su coste sería de $n^k$.
+\end{itemize}
+
+Una vez computada el coste de cada función por separado se puede obtener el coste total del algoritmo en el pero caso siendo:
+\begin{equation}
+    T_{\mathrm{DFS}}(n) = 4n^k+4
+\end{equation}
+
+La complejidad temporal del algoritmo de Floyd-Warshall, viene dada por los tres bucles anidados donde se calcula la distancia entre nodos  siendo esta:
+\begin{equation}
+    O_{\mathrm{DFS}}(n^k) 
+\end{equation}
 
 \subsection*{Evaluación empírica}
 
