@@ -18,10 +18,6 @@
 using path_t = std::function<bool(const RandomUndirectedGraph &, int, int)>;  // PATH function wrapper
 using clique_t = std::function<bool(const RandomUndirectedGraph &, int)>;  // CLIQUE function wrapper
 
-// template <typename F>
-// concept executable_function = requires (F f) {
-//     f();
-// };
 
 
 /**
@@ -41,9 +37,7 @@ void test_path(int n, float p, int iter, int u, int v, path_t func, bool print_g
 
         // create graph
         RandomUndirectedGraph graph {n, p};
-        if (print_graph) {
-            std::cout << "\"graph\":" << graph << ",";
-        }
+        if (print_graph) std::cout << "\"graph\":" << graph << ",";
 
         // run
         auto tic = std::chrono::high_resolution_clock::now();
@@ -78,9 +72,7 @@ void test_clique(int n, float p, int iter, int k, clique_t func, bool print_grap
 
         // create graph
         RandomUndirectedGraph graph {n, p};
-        if (print_graph) {
-            std::cout << "\"graph\":" << graph << ",";
-        }
+        if (print_graph) std::cout << "\"graph\":" << graph << ",";
 
         // run
         auto tic = std::chrono::high_resolution_clock::now();
@@ -99,6 +91,46 @@ void test_clique(int n, float p, int iter, int k, clique_t func, bool print_grap
 }
 
 
+/**
+* @brief solves a K-SAT problem by transforming it to a k-clique problem
+*/
+void test_sat(int n, float p, int iter, std::string problem, bool print_graph) {
+    std::cout << "{";
+    std::cout << "\"n\":" << n << ",";
+    std::cout << "\"p\":" << p << ",";
+    std::cout << "\"problem\":" << problem << ",";
+
+    std::cout << "\"tests\":[";
+
+    for (int i = 0; i < iter; ++i) {
+        std::cout << "{";
+
+        // transform K-SAT into K-CLIQUE
+        auto tic = std::chrono::high_resolution_clock::now();
+        auto [graph, k] = sat_to_clique(problem);
+        auto toc_t = std::chrono::high_resolution_clock::now();
+
+        // solve k-clique
+        bool result = graph.k_clique(k);
+        auto toc = std::chrono::high_resolution_clock::now();
+
+        if (print_graph) std::cout << "\"graph\":" << graph << ",";
+
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(toc-tic).count();
+        auto duration_transf = std::chrono::duration_cast<std::chrono::nanoseconds>(toc_t-tic).count();
+
+        std::cout << "\"result\":" << (result ? "true" : "false") << ",";
+        std::cout << "\"duration\":" << duration << ",";
+        std::cout << "\"duration_transf\":" << duration_transf << "}";
+
+        if (i < iter - 1) std::cout << ",";
+    }
+
+    std::cout << "]}";
+}
+
+
+
 
 /* CLI */
 
@@ -115,7 +147,6 @@ DEFINE_bool(help, false, "show a list of command-line options");
 
 int main(int argc, char* argv[]) {
 
-
     // parse cli
     REGISTER_FLAG(argc, argv, n);
     REGISTER_FLAG(argc, argv, p);
@@ -125,8 +156,10 @@ int main(int argc, char* argv[]) {
     REGISTER_FLAG(argc, argv, help);
 
     if (FLAG_help) {
-        std::cout << "Usage:\n  " << argv[0] << " [options]\n\nOPTIONS";
+        std::cout << "Usage:\n  " << argv[0] << " [options]";
+        std::cout << "\n\nOPTIONS";
         flaghelp();
+        std::cout << "\nIf using the K-CLIQUE algorithm, add the problem string as the last parameter.\n";
 
         return 0;
     }
@@ -155,19 +188,18 @@ int main(int argc, char* argv[]) {
 
         test_path(FLAG_n, FLAG_p, FLAG_iterations, u, v, f, FLAG_graph);
     }
-    /* CLIQUE */
-    else if (FLAG_algorithm.contains("CLIQUE")) {
-        const int k = std::floor(FLAG_n / 2);
-        clique_t f;
 
-        if (FLAG_algorithm == "CLIQUE") {
-            f = &RandomUndirectedGraph::k_clique;
-        }
-        else {
-            std::cerr << "Unknown algorithm '" << FLAG_algorithm << "'\n";
-            return -1;
-        }
+    /* CLIQUE */
+    else if (FLAG_algorithm == "CLIQUE") {
+        const int k = std::floor(FLAG_n / 2);
+        clique_t f = &RandomUndirectedGraph::k_clique;
         test_clique(FLAG_n, FLAG_p, FLAG_iterations, k, f, FLAG_graph);
+    }
+
+    /* SAT-CLIQUE */
+    else if (FLAG_algorithm == "SAT-CLIQUE") {
+        // "((c+b+-c)*(a+b+c)*(-a+b+c))"
+        test_sat(FLAG_n, FLAG_p, FLAG_iterations, argv[argc - 1], FLAG_graph);
     }
     else {
         std::cerr << "Unknown algorithm '" << FLAG_algorithm << "'\n";

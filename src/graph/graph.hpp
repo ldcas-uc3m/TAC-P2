@@ -8,6 +8,7 @@
 #include <iterator>
 #include <set>
 #include <initializer_list>
+#include <tuple>
 
 
 
@@ -25,7 +26,7 @@ class Graph {
         /**
         * @brief adds a node to the graph, given the adjacency vector
         */
-        void add_node(std::initializer_list<int> node);
+        void add_node(std::vector<int> node);
 
         /**
         * @brief clears the graph
@@ -112,6 +113,10 @@ class Graph {
         */
         inline int degree(int i) const;
 
+
+        /* SAT SOLVER implementations */
+
+
 };
 
 
@@ -139,6 +144,24 @@ class RandomUndirectedGraph : public Graph {
 
 
 
+/* SAT SOLVER implementations */
+
+/**
+ * @brief Transforms a K-SAT problem, using parenthesis, * (AND), + (OR) & - (NOT),
+ * into a k-clique graph
+ * @return Tuple w/ graph and k
+*/
+std::tuple<Graph, size_t> sat_to_clique(const std::string & problem);
+
+
+
+/* Aux functions */
+
+/**
+ * @brief prints a vector
+*/
+template <typename T>
+inline void print_v(const std::vector<T> & container);
 
 
 

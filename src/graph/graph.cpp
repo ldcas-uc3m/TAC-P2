@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <array>
 #include <iostream>
+#include <regex>
+#include <cmath>
+
 
 
 std::random_device rd;
@@ -30,13 +33,25 @@ void Graph::init(std::initializer_list<std::initializer_list<int>> new_nodes) {
 }
 
 
-void Graph::add_node(std::initializer_list<int> node) {
-    std::vector<int> new_node {node};
+void Graph::add_node(std::vector<int> adj_nodes) {
+    std::vector<int> new_node {};
 
-    // update edges
-    for (size_t i = 0; i < edges.size(); ++i) {
-        edges[i].push_back(new_node[i]);
+    int edge;
+
+    // add adjacent nodes
+    size_t j = 0;  // counter for adj_nodes
+    for (size_t i = 0; i < size(); ++i) {
+        if (adj_nodes.size() > 0 && (static_cast<int>(i) == adj_nodes[j])) {  // there is an edge
+            edge = 1;
+            if (j < adj_nodes.size()) ++j;
+        }
+        else edge = 0;
+
+        edges[i].push_back(edge);
+        new_node.push_back(edge);
     }
+
+    new_node.push_back(0);  // link to self
 
     edges.push_back(new_node);
 }
@@ -73,7 +88,7 @@ void RandomUndirectedGraph::add_random_node(float prob_edge) {
 /* PATH(u,v) */
 
 
-bool Graph::_path_dfs(int u, int v, std::set<int> & visited) const{
+bool Graph::_path_dfs(int u, int v, std::set<int> & visited) const {
     if (u == v) return true;
     visited.insert(u);
 
@@ -203,3 +218,69 @@ bool Graph::is_clique(std::vector<int> & graph) const {
 }
 
 
+
+
+/* K-SAT to K-Clique */
+
+std::tuple<Graph, size_t> sat_to_clique(const std::string & problem) {
+    // TODO: validate problem format
+
+    // extract vars
+    std::vector<std::string> vars;
+
+    const std::regex re_vars(R"((-?[a-z]))");
+    std::smatch match;
+
+    std::sregex_iterator start {problem.cbegin(), problem.cend(), re_vars};
+    std::sregex_iterator end;
+
+    for (auto i = start; i != end; ++i) {
+        vars.push_back(i->str());
+        // std::cout << i->str() << ", ";
+    }
+
+    const auto k = static_cast<size_t>(std::sqrt(vars.size()));
+    assert(vars.size() == k * k);  // check k perfect square (correct number of vars)
+
+    // generate graph
+    Graph g {};
+    std::vector<std::string> in_vars;
+
+    for (size_t i = 0; i < vars.size(); ++i) {
+        std::vector<int> adj_nodes {};
+
+        std::string el = vars[i];
+        std::string not_el;
+        if (el[0] == '-') {
+            not_el = el[1];
+        }
+        else not_el = '-' + el;
+
+        for (size_t j = 0; j < in_vars.size(); ++j) {
+            if (i / k == j / k) continue;  // don't connect if same group
+            if (in_vars[j] != not_el) adj_nodes.push_back(j);
+        }
+
+        g.add_node(adj_nodes);
+
+        in_vars.push_back(std::move(vars[i]));
+    }
+
+    // std::cout << g << "\n";
+    // print_v(in_vars);
+    // std::cout << "\n";
+
+    return {g, k};
+}
+
+
+
+template <typename T>
+inline void print_v(const std::vector<T> & container) {
+    std::cout << '[';
+    for (auto it = container.begin(); it != container.end(); ++it) {
+        std::cout << *it;
+        if (std::next(it) != container.end()) std::cout << ", ";
+    }
+    std::cout << ']';
+}
