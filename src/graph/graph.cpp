@@ -249,6 +249,7 @@ std::tuple<Graph, size_t> sat_to_clique(const std::string & problem) {
     for (size_t i = 0; i < vars.size(); ++i) {
         std::vector<int> adj_nodes {};
 
+        // compute inverse of element
         std::string el = vars[i];
         std::string not_el;
         if (el[0] == '-') {
@@ -256,6 +257,7 @@ std::tuple<Graph, size_t> sat_to_clique(const std::string & problem) {
         }
         else not_el = '-' + el;
 
+        // connect to rest of graph
         for (size_t j = 0; j < in_vars.size(); ++j) {
             if (i / k == j / k) continue;  // don't connect if same group
             if (in_vars[j] != not_el) adj_nodes.push_back(j);
