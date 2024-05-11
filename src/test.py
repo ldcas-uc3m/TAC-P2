@@ -336,7 +336,7 @@ if __name__ == "__main__":
     #----PATH-DFS test p----
     
     # 50% Probability of connect each node 
-    test_DFS = test_p(200,"PATH-DFS", 1200)
+    test_DFS = test_p(200,"PATH-DFS", 300)
     test_DFS.to_csv(DATA_FOLDER/'test_DFS_p.csv', index=False)
 
     # Plot graph
@@ -347,13 +347,6 @@ if __name__ == "__main__":
     
 
     #----PATH-FW test n----
-    
-    # 50% Probability of connect each node 
-    test_FW = test_n(2,400,default_probability,"PATH-FW",300)
-    test_FW.to_csv(DATA_FOLDER/'test_FW_n.csv', index=False)
-
-    # Plot graph
-    plot_dataframes({'PATH-FW (p = %.1f)' % default_probability: test_FW}, 'n', 'duration', IMAGE_FOLDER/'performance_FW_n.svg')
     
     
     # 25% Probability of connect each node, worst case 
@@ -375,7 +368,7 @@ if __name__ == "__main__":
     #----PATH-FW test p----
     
     # 50% Probability of connect each node 
-    test_FW = test_p(200,"PATH-FW", 1200)
+    test_FW = test_p(200,"PATH-FW", 300)
     test_FW.to_csv(DATA_FOLDER/'test_FW_p.csv', index=False)
 
     # Plot graph
@@ -385,8 +378,6 @@ if __name__ == "__main__":
     
 
     #----CLIQUE test n----
-
-
     
     # 25% Probability of connect each node, worst case 
     test_DFS1 = test_n(2,120,0.25 ,"CLIQUE",300)
@@ -408,7 +399,7 @@ if __name__ == "__main__":
     
     # 50% Probability of connect each node 
     logger.info("Testing PATH-CLIQUE...")
-    test_FW = test_p(200,"CLIQUE", 1200)
+    test_FW = test_p(200,"CLIQUE", 300)
     test_FW.to_csv(DATA_FOLDER/'test_CLIQUE_p.csv', index=False)
 
     # Plot graph
@@ -422,8 +413,7 @@ if __name__ == "__main__":
         {"total duration": test_SAT, "transformation": test_SAT_t},
         x_column="iteration",
         y_column="time",
-        save_file=IMAGE_FOLDER/'performance_SAT.svg',
-        custom_ticks=False
+        save_file=IMAGE_FOLDER/'performance_SAT.svg'
     )
 
 
