@@ -147,8 +147,7 @@ class RandomUndirectedGraph : public Graph {
 /* SAT SOLVER implementations */
 
 /**
- * @brief Transforms a K-SAT problem, using parenthesis, * (AND), + (OR) & - (NOT),
- * into a k-clique graph
+ * @brief Transforms a K-SAT problem, using parenthesis, * (AND), + (OR) & - (NOT), into a k-clique graph
  * @return Tuple w/ graph and k
 */
 std::tuple<Graph, size_t> sat_to_clique(const std::string & problem);

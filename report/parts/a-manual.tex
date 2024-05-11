@@ -2,7 +2,36 @@
 
 \section*{Instalación y ejecución}
 
-\subsection*{Uso del simulador}
+\subsection*{Uso del simulador}\label{sec:compilation}
+Compila el simulador con CMake\footurl{https://cmake.org/} y ninja-build\footurl{https://ninja-build.org/}:
+\begin{verbatim}
+mkdir build
+cd build
+cmake .. -G Ninja
+cmake --build .
+\end{verbatim}
+Si estás en Windows, te recomendamos instalar WSL2\footurl{https://learn.microsoft.com/es-es/windows/wsl/install} y ejecutar `en Linux', o con GCC a través de MinGW-W64\footurl{https://www.mingw-w64.org/} (puedes encontrar binarios ya compilados en \url{https://github.com/niXman/mingw-builds-binaries}).
+
+El simulador saca por \texttt{STDOUT} una \textit{string} en formato JSON con los resultados de la simulación especificada. Para ver las opciones, usa el parámetro \texttt{-{}-help}:
+\begin{verbatim}
+Usage
+  src/p2 [options] [SAT-PROBLEM]
+
+OPTIONS
+  --n [5]                  size of the graph
+  --p [0.5]                probability of an edge between two nodes
+  --algorithm ["CLIQUE"]   algorithm to apply (PATH-DFS, PATH-FW, CLIQUE,
+                           SAT-CLIQUE)
+  --iterations [1]         number of iterations to execute
+  --graph [true]           output the graph
+  --help [false]           show a list of command-line options
+
+ARGUMENTS
+  SAT-PROBLEM              Problem string for the K-SAT algorithm,
+                           using parenthesis, * (AND), + (OR) & - (NOT).
+                           E.g.: "((c+b+-c)*(a+b+c)*(-a+b+c))"
+\end{verbatim}
+
 
 
 \subsection*{Ejecución de los tests en Python}
@@ -27,14 +56,7 @@ source .venv/bin/activate
   \begin{verbatim}
 pip install -r requirements.txt
   \end{verbatim}
-  \item Compila el simulador con CMake\footurl{https://cmake.org/} y ninja-build\footurl{https://ninja-build.org/}:
-  \begin{verbatim}
-mkdir build
-cd build
-cmake .. -G Ninja
-cmake --build .
-  \end{verbatim}
-  Si estás en Windows, te recomendamos instalar WSL2\footurl{https://learn.microsoft.com/es-es/windows/wsl/install} y ejecutar `en Linux', o con GCC a través de MinGW-W64\footurl{https://www.mingw-w64.org/} (puedes encontrar binarios ya compilados en \url{https://github.com/niXman/mingw-builds-binaries}).
+  \item Compila el simulador (ver \href{sec:compilation}{Uso del simulador}).
   \item Ejecuta el \textit{script} con:
   \begin{verbatim}
 python3 src/test.py

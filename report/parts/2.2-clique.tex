@@ -1,67 +1,37 @@
-\section{Estudio de K-Clique}\label{sec:clique}
-
-\subsection{Clique}\label{subsec:clique}
-
-\subsection*{Evaluación analítica del algoritmo}
-
- El presente algoritmo desarrollado de clique permite que dado un vector conteniendo una serie de nodos, determinar si dichos forman un subgrafo totalmente conectado dentro del grafo original.
-
- Para este propósito el algoritmo cuenta con dos bucles anidados, en el bucle externo recorre cada nodo, y el bucle interno compara cada nodo con el resto de nodos posteriores dentro del vector evitando comparar pares ya comparados previamente.
- 
- El coste del primer nodo sería de $n$ pues dentro únicamente se encuentra el segundo bucle. 
- El bucle interno cuenta con un coste de $n$ e internamente realiza una comparación de tipo $IF$ con un coste de 3, por lo que el coste total del bucle interno sería de $3n$.
- Una vez calculado el coste de cada bucle se obtiene, que el coste total sería 
-\begin{equation}
-    T_{\mathrm{Clique}}(n) = 3n^2
-\end{equation}
-
-El coste en términos de complejidad temporal vendría marcado por el uso de dos bucles anidados que sería: 
-\begin{equation}
-    O_{\mathrm{Clique}}(n^2) 
-\end{equation}
-
-
-
-\subsection{K-Clique}\label{subsec:k-clique}
+\section{Estudio de K-CLIQUE}\label{sec:clique}
+El algoritmo `K-CLIQUE' permite, dado un grafo, determinar si existe un subgrafo de tamaño $k$ totalmente conectado dentro del grafo original.
 
 
 \subsection*{Evaluación analítica del algoritmo}
-
 Para analizar el coste computacional del algoritmo desarrollado, se puede dividir en tres secciones claramente diferenciadas para luego sumar sus costes y obtener un total, siendo dichas secciones: 
 
 \begin{itemize}
-    
     \item \textbf{Inicialización del Algoritmo}: Inicializar el algoritmo creando el subgrafo que se va a buscar y retornar el resultado final tiene un coste de 3.
-
-    \item \textbf{Verificación de conexión entre nodos}: Esta función permite verificar si un nodo dado es está conectado con el resto de nodos del subgrafo que se esta comprobando como clique, teniendo un coste en el peor caso de n, y al tener dentro dos comparaciones de tipo $IF$ el coste ascendería a $5n$.
-
-    \item \textbf{Búsqueda k-clique}: Esta función tiene un comportamiento recursivo llamándose así misma tratando de añadir cada nodo al subgrafo clique que se está buscando, comprobando si el nuevo nodo está conectado con todos los del clique actual.
-    El coste de dicha función sería de $n^k$ al tratarse de una función recursiva, y al contar con dos comparaciones $IF$ el coste total sería de $7n^k$
-
-
+    \item \textbf{Verificación de conexión entre nodos}: Esta función permite verificar si un nodo dado es está conectado con el resto de nodos del subgrafo que se está comprobando como CLIQUE, teniendo un coste de $n$ en el peor caso, y al tener dentro dos comparaciones de tipo \texttt{IF} el coste ascendería a $5n$.
+    \item \textbf{Búsqueda K-CLIQUE}: Esta función tiene un comportamiento recursivo llamándose así misma tratando de añadir cada nodo al subgrafo CLIQUE que se está buscando, comprobando si el nuevo nodo está conectado con todos los del CLIQUE actual.
+    El coste de dicha función sería de $n^k$ al tratarse de una función recursiva, y al contar con dos comparaciones \texttt{IF} el coste total sería de $7n^k$.
 \end{itemize}
 
-Una vez calculado los costes de cada sección se puede obtener el coste total. La función de verificación de conexión entre nodos se llama de  manera anidada dentro de la función de verificación de k-clique, por lo que el coste total sería de:
+Una vez calculado los costes de cada sección se puede obtener el coste total. La función de verificación de conexión entre nodos se llama de  manera anidada dentro de la función de verificación de K-CLIQUE, por lo que el coste total sería de:
 
 \begin{equation}
-    T_{\mathrm{K-Clique}}(n) = 35n^k n +3
+    T_{k\mathrm{-CLIQUE}}(n) = 7n^k + 5n +3
 \end{equation}
 
-El coste en términos de complejidad temporal vendría marcado por el uso de uan función recursiva : 
+El coste en términos de complejidad temporal vendría marcado por el uso de una función recursiva: 
 \begin{equation}
-    O_{\mathrm{Clique}}(n^k) 
+    O_{k\mathrm{-CLIQUE}}(n^k) 
 \end{equation}
 
 
 
 \subsection*{Evaluación empírica}
-
-Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva acabo una batería de pruebas con diferentes valores tanto para una misma $n$ con diferentes $p$ como a la inversa, a fin de comprobar como afecta cada una al rendimiento.
+Para evaluar el comportamiento del algoritmo creado y comprobar si las conclusiones desarrolladas en la evaluación analítica son correctas se lleva a cabo una batería de pruebas con diferentes valores tanto para una misma $n$ con diferentes $p$ como a la inversa, a fin de comprobar como afecta cada una al rendimiento.
 
 \plotperformance{CLIQUE}
 
-Se observa claramente como el costo de $T(n)$ es mucho menor para grafos con densidades extremas. Con $p=0.2$ se trata de grafos muy poco conectados donde el algoritmo rápidamente identificará que no es posible encontrar cliques de gran tamaño  dentro del grafo. Para $p=1.0$ se trata de un grafo totalmente conectado por lo que el algoritmo rápidamente encuentra que el clique máximo será el propio grafo.
+Se observa claramente como el costo de $T(n)$ es mucho menor para grafos con densidades extremas. Con $p=0.2$ se trata de grafos muy poco conectados donde el algoritmo rápidamente identificará que no es posible encontrar cliques de gran tamaño  dentro del grafo. Para $p=1.0$ se trata de un grafo totalmente conectado por lo que el algoritmo rápidamente encuentra que el CLIQUE máximo será el propio grafo.
 
 Por otro lado el tener una $p=0.5$ indica que el grafo tendrá una densidad media por lo que el algoritmo tendrá que probar un mayor número de posibles combinaciones para encontrar el mayor clique.
 
-El gráfico en función de $p$ muestra claramente los punto expuestos donde el tiempo máximo de computo se obtiene para los valores donde el grafo generado tiene una densidad media que exigirá realizar más comprobaciones siendo los valores que exigirán un mayor tiempo aquellos comprendidos entre $p=0.5$ y $p=0,7$, mientras que se observa claramente que para los puntos extremos el tiempo disminuye.
+El gráfico en función de $p$ muestra claramente los puntos expuestos donde el tiempo máximo de cómputo se obtiene para los valores donde el grafo generado tiene una densidad media que exigirá realizar más comprobaciones siendo los valores que exigirán un mayor tiempo aquellos comprendidos entre $p=0.5$ y $p=0.7$, mientras que se observa claramente que para los puntos extremos el tiempo disminuye.

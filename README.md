@@ -87,20 +87,20 @@ Build:
 The simulator returns a JSON string with information about the performed simulations.  
 To view all options, run `src/p2 --help`:
 ```
-Usage:
-  /home/ldcas/dev/TAC-P2/build/src/p2 [options] [SAT-PROBLEM]
+Usage
+  src/p2 [options] [SAT-PROBLEM]
 
 OPTIONS
-  --n [5]       size of the graph
-  --p [0.5]     probability of an edge between two nodes
-  --algorithm ["CLIQUE"]        algorithm to apply (PATH-DFS, PATH-FW, CLIQUE, SAT-CLIQUE)
-  --iterations [1]      number of iterations to execute
-  --graph [true]        output the graph
-  --help [false]        show a list of command-line options
+  --n [5]                 size of the graph
+  --p [0.5]               probability of an edge between two nodes
+  --algorithm ["CLIQUE"]  algorithm to apply (PATH-DFS, PATH-FW, CLIQUE, SAT-CLIQUE)
+  --iterations [1]        number of iterations to execute
+  --graph [true]          output the graph
+  --help [false]          show a list of command-line options
 
 ARGUMENTS
   SAT-PROBLEM   Problem string for the K-SAT algorithm, using parenthesis, * (AND), + (OR) & - (NOT).
-                E.g.: ((c+b+-c)*(a+b+c)*(-a+b+c))
+                E.g.: "((c+b+-c)*(a+b+c)*(-a+b+c))"
 ```
 
 
